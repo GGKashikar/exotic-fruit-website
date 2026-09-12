@@ -11,6 +11,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body class="has-hero is-home">
   <a class="skip-link" href="#main">Skip to content</a>
@@ -499,42 +501,83 @@
       <div class="container">
         <header class="section-head">
           <div>
-            <p class="section-kicker">Processing Unit Map &amp; Export Reach</p>
-            <h2>Farm belts, plants, and port shipping routes</h2>
-            <p class="section-intro">Overview of GI fruit belts, four processing campuses, and export dispatch via JNPT Mumbai and Chennai Port.</p>
+            <p class="section-kicker">Global operations</p>
+            <h2>Processing Units &amp; Global Footprint</h2>
+            <p class="section-intro">Select a site to fly the map to Corporate HQ or any of the four processing campuses. All five operational pins are visible on load, with export routing via JNPT Mumbai and Chennai Port.</p>
           </div>
         </header>
-        <div class="reach-map">
-          <div class="reach-canvas" aria-label="India processing and port map">
-            <svg class="reach-svg" viewBox="0 0 640 420" role="img" aria-label="Alphonso-shaped processing and port map">
-              <path d="M318 54 C278 34 230 42 195 74 C168 102 158 150 168 200 C176 236 192 262 218 280 C242 294 252 320 238 348 C226 372 250 396 286 402 C326 408 376 386 412 348 C444 322 460 282 454 232 C448 180 422 114 368 72 C348 58 332 52 318 54Z" fill="rgba(244,247,245,0.08)" stroke="rgba(155,230,126,0.45)" stroke-width="1.8" stroke-linejoin="round"/>
-              <path d="M316 52 L322 30 Q326 24 330 32 L324 52" fill="none" stroke="rgba(155,230,126,0.55)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              <path d="M330 48 C358 40 398 55 430 92 C456 128 466 172 454 210 C446 226 430 222 420 198 C406 155 384 95 348 58 C338 48 332 46 330 48Z" fill="rgba(155,230,126,0.10)" stroke="rgba(155,230,126,0.5)" stroke-width="1.5" stroke-linejoin="round"/>
-              <path d="M332 50 C362 68 402 112 432 160 C440 178 444 196 448 208" fill="none" stroke="rgba(155,230,126,0.4)" stroke-width="1" stroke-linecap="round"/>
-              <path d="M210 210 C 250 180, 320 170, 380 200" fill="none" stroke="#F28C28" stroke-width="2" stroke-dasharray="6 6" opacity="0.7"/>
-              <path d="M250 250 C 300 270, 360 290, 410 310" fill="none" stroke="#9BE67E" stroke-width="2" stroke-dasharray="5 5" opacity="0.65"/>
-              <circle cx="220" cy="210" r="7" fill="#F28C28"/><text x="232" y="214" fill="#edf5f1" font-size="12">Ratnagiri</text>
-              <circle cx="300" cy="175" r="7" fill="#F28C28"/><text x="312" y="179" fill="#edf5f1" font-size="12">Nashik</text>
-              <circle cx="360" cy="250" r="7" fill="#F28C28"/><text x="372" y="254" fill="#edf5f1" font-size="12">Chittoor</text>
-              <circle cx="390" cy="280" r="7" fill="#F28C28"/><text x="402" y="284" fill="#edf5f1" font-size="12">Krishnagiri</text>
-              <circle cx="195" cy="230" r="6" fill="#9BE67E"/><text x="160" y="250" fill="#9BE67E" font-size="11">JNPT Mumbai</text>
-              <circle cx="430" cy="310" r="6" fill="#9BE67E"/><text x="440" y="330" fill="#9BE67E" font-size="11">Chennai Port</text>
-            </svg>
+        <div class="footprint-layout">
+          <div class="footprint-cards" role="list" aria-label="Operational locations">
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="hq">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">01</span>
+                <div>
+                  <p class="footprint-card-kicker">Corporate HQ</p>
+                  <h3>Corporate Office</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">502, Malhotra Chambers, Deonar, Govandi (East), Mumbai, Maharashtra – 400 088, India</p>
+              <p class="footprint-card-meta"><a href="tel:+912225550091">+91 22 2555 0091 / 92 / 93</a></p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Global Export HQ / JNPT Connection</span>
+            </article>
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="ratnagiri">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">02</span>
+                <div>
+                  <p class="footprint-card-kicker">Processing unit</p>
+                  <h3>Ratnagiri</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">Plot No G-19/20, MIDC Mirjole, Ratnagiri, Maharashtra – 415639, India</p>
+              <p class="footprint-card-meta"><a href="tel:+9102352229653">+91 02352-229653</a></p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Alphonso Mango &amp; Guava Belt | JNPT Port</span>
+            </article>
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="nashik">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">03</span>
+                <div>
+                  <p class="footprint-card-kicker">Processing unit</p>
+                  <h3>Nashik</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">Plot No CU-81, Additional Vinchur Industrial Area, Niphad, Vinchur, Nashik, Maharashtra – 422305, India</p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Tomato &amp; Pomegranate Belt | JNPT Port</span>
+            </article>
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="krishnagiri">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">04</span>
+                <div>
+                  <p class="footprint-card-kicker">Processing unit</p>
+                  <h3>Krishnagiri</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">S.F. No.263/1, Bargur Thirupathur Road, Sigaralapally Post, Bargur, Krishnagiri, Tamil Nadu – 635104, India</p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Totapuri Mango Belt | Chennai Port</span>
+            </article>
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="chittoor">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">05</span>
+                <div>
+                  <p class="footprint-card-kicker">Processing unit</p>
+                  <h3>Chittoor</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">Industrial Estate, Chittoor, Andhra Pradesh – 517001, India</p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Tropical Fruit Processing | Chennai Port</span>
+            </article>
           </div>
-          <div class="reach-side">
-            <article>
-              <h3>GI fruit belts</h3>
-              <p>Ratnagiri Alphonso and Krishnagiri Totapuri belts supply peak-season aseptic lines.</p>
-            </article>
-            <article>
-              <h3>Four processing plants</h3>
-              <p>Ratnagiri &middot; Krishnagiri &middot; Nashik &middot; Chittoor &mdash; de-stoners, decanters, flash sterilizers, aseptic fillers.</p>
-            </article>
-            <article>
-              <h3>Export ports</h3>
-              <p>Container dispatch via JNPT Mumbai and Chennai Port to 30+ destination markets.</p>
-            </article>
-            <a class="btn-secondary" href="supply-chain.html#plants">Open plant infrastructure &rarr;</a>
+          <div class="footprint-map-panel">
+            <div class="footprint-map-toolbar">
+              <p>Interactive plant map</p>
+            </div>
+            <div class="footprint-map-wrap">
+              <div id="map" role="region" aria-label="Operational locations across India"></div>
+            </div>
           </div>
         </div>
         <div class="plant-grid" style="margin-top:28px">

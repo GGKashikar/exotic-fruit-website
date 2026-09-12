@@ -917,6 +917,354 @@
     start();
   })();
 
+  /* Interactive processing-unit map (Leaflet) */
+  (function initFootprintMap() {
+    var mapEl = document.getElementById("map");
+    if (!mapEl || typeof L === "undefined") return;
+
+    var locations = {
+      hq: {
+        name: "Corporate Office (HQ)",
+        short: "HQ",
+        place: "Mumbai, Maharashtra",
+        kind: "hq",
+        coords: [19.0438, 72.9103],
+        zoom: 14,
+        address: "502, Malhotra Chambers, Deonar, Govandi (East), Mumbai, Maharashtra – 400 088, India",
+        phone: "+91 22 2555 0091 / 92 / 93",
+        phoneHref: "tel:+912225550091",
+        email: "info@exotic-fruit.com",
+        tag: "Global Export HQ / JNPT Connection"
+      },
+      ratnagiri: {
+        name: "Ratnagiri Processing Unit",
+        short: "Ratnagiri",
+        place: "Ratnagiri, Maharashtra",
+        kind: "plant",
+        coords: [16.9902, 73.312],
+        zoom: 13,
+        address: "Plot No G-19/20, MIDC Mirjole, Ratnagiri, Maharashtra – 415639, India",
+        phone: "+91 02352-229653",
+        phoneHref: "tel:+9102352229653",
+        email: "info@exotic-fruit.com",
+        tag: "Alphonso Mango & Guava Belt | JNPT Port"
+      },
+      nashik: {
+        name: "Nashik Processing Unit",
+        short: "Nashik",
+        place: "Nashik, Maharashtra",
+        kind: "plant",
+        coords: [20.1062, 74.0242],
+        zoom: 13,
+        address: "Plot No CU-81, Additional Vinchur Industrial Area, Niphad, Vinchur, Nashik, Maharashtra – 422305, India",
+        phone: "",
+        phoneHref: "",
+        email: "info@exotic-fruit.com",
+        tag: "Tomato & Pomegranate Belt | JNPT Port"
+      },
+      krishnagiri: {
+        name: "Krishnagiri Processing Unit",
+        short: "Krishnagiri",
+        place: "Krishnagiri, Tamil Nadu",
+        kind: "plant",
+        coords: [12.5458, 78.3582],
+        zoom: 13,
+        address: "S.F. No.263/1, Bargur Thirupathur Road, Sigaralapally Post, Bargur, Krishnagiri, Tamil Nadu – 635104, India",
+        phone: "",
+        phoneHref: "",
+        email: "info@exotic-fruit.com",
+        tag: "Totapuri Mango Belt | Chennai Port"
+      },
+      chittoor: {
+        name: "Chittoor Processing Unit",
+        short: "Chittoor",
+        place: "Chittoor, Andhra Pradesh",
+        kind: "plant",
+        coords: [13.2172, 79.1003],
+        zoom: 13,
+        address: "Industrial Estate, Chittoor, Andhra Pradesh – 517001, India",
+        phone: "",
+        phoneHref: "",
+        email: "info@exotic-fruit.com",
+        tag: "Tropical Fruit Processing | Chennai Port"
+      }
+    };
+
+    function hoverLabel(loc) {
+      return loc.name;
+    }
+
+    function pinIcon(loc) {
+      return L.divIcon({
+        className: "footprint-marker" + (loc.kind === "hq" ? " is-hq" : ""),
+        html: '<span class="footprint-pin" aria-hidden="true"></span><span class="footprint-pin-name" aria-hidden="true">' + loc.short + "</span>",
+        iconSize: [92, 56],
+        iconAnchor: [46, 36],
+        popupAnchor: [0, -38]
+      });
+    }
+
+    function popupHtml(loc) {
+      var phoneLine = loc.phone
+        ? '<p><a href="' + loc.phoneHref + '">' + loc.phone + "</a></p>"
+        : "";
+      return (
+        '<div class="footprint-popup-inner">' +
+        '<p class="footprint-popup-kicker">' + (loc.kind === "hq" ? "Corporate HQ" : "Processing unit") + "</p>" +
+        "<h3>" + loc.name + "</h3>" +
+        "<p>" + loc.address + "</p>" +
+        phoneLine +
+        '<a href="mailto:' + loc.email + '">' + loc.email + "</a>" +
+        '<div><span class="footprint-popup-tag">' + loc.tag + "</span></div>" +
+        "</div>"
+      );
+    }
+
+    var map = L.map(mapEl, {
+      scrollWheelZoom: true,
+      zoomControl: true,
+      closePopupOnClick: true
+    });
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      maxZoom: 19,
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+    }).addTo(map);
+
+    var markers = {};
+    var bounds = L.latLngBounds([]);
+    var activeId = "";
+    var suppressMapClose = false;
+
+    function fitAll() {
+      map.fitBounds(bounds, {
+        paddingTopLeft: [18, 18],
+        paddingBottomRight: [28, 18],
+        maxZoom: 6
+      });
+    }
+
+    function closeAllTooltips(exceptId) {
+      Object.keys(markers).forEach(function (key) {
+        if (exceptId && key === exceptId) return;
+        markers[key].closeTooltip();
+      });
+    }
+
+    function closeAllPopups(exceptId) {
+      Object.keys(markers).forEach(function (key) {
+        if (exceptId && key === exceptId) return;
+        markers[key].closePopup();
+      });
+      if (!exceptId) map.closePopup();
+    }
+
+    function bestTooltipDirection(marker) {
+      var pt = map.latLngToContainerPoint(marker.getLatLng());
+      var size = map.getSize();
+      var edgeX = 120;
+      var edgeY = 56;
+      if (pt.y < edgeY) return "bottom";
+      if (pt.x > size.x - edgeX) return "left";
+      if (pt.x < edgeX) return "right";
+      return "top";
+    }
+
+    function tooltipOffset(direction) {
+      if (direction === "bottom") return [0, 8];
+      if (direction === "left") return [-14, -18];
+      if (direction === "right") return [14, -18];
+      return [0, -36];
+    }
+
+    function showHoverTooltip(id) {
+      var marker = markers[id];
+      if (!marker) return;
+
+      closeAllPopups();
+      closeAllTooltips(id);
+
+      var direction = bestTooltipDirection(marker);
+      var tooltip = marker.getTooltip();
+      if (tooltip) {
+        tooltip.options.direction = direction;
+        tooltip.options.offset = tooltipOffset(direction);
+      }
+
+      marker.openTooltip();
+      map.panInside(marker.getLatLng(), {
+        paddingTopLeft: [28, 48],
+        paddingBottomRight: [28, 48],
+        animate: true,
+        duration: 0.2
+      });
+    }
+
+    function highlightCards(id, scrollIntoView) {
+      document.querySelectorAll(".footprint-card").forEach(function (card) {
+        var on = card.getAttribute("data-location") === id;
+        card.classList.toggle("is-active", on);
+        card.setAttribute("aria-pressed", on ? "true" : "false");
+        if (on && scrollIntoView) {
+          card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+      });
+
+      Object.keys(markers).forEach(function (key) {
+        var el = markers[key].getElement();
+        if (el) {
+          el.classList.toggle("is-active", key === id);
+          el.setAttribute("aria-expanded", key === id ? "true" : "false");
+        }
+      });
+    }
+
+    function setActive(id, fly) {
+      var loc = locations[id];
+      var marker = markers[id];
+      if (!loc || !marker) return;
+
+      activeId = id;
+      closeAllTooltips();
+      closeAllPopups(id);
+      highlightCards(id, !fly);
+
+      suppressMapClose = true;
+      if (fly) {
+        map.flyTo(loc.coords, loc.zoom, { duration: 1.15 });
+        map.once("moveend", function () {
+          marker.openPopup();
+          window.setTimeout(function () {
+            suppressMapClose = false;
+          }, 50);
+        });
+      } else {
+        map.panInside(marker.getLatLng(), {
+          paddingTopLeft: [40, 72],
+          paddingBottomRight: [40, 72],
+          animate: true,
+          duration: 0.25
+        });
+        marker.openPopup();
+        window.setTimeout(function () {
+          suppressMapClose = false;
+        }, 50);
+      }
+    }
+
+    Object.keys(locations).forEach(function (id) {
+      var loc = locations[id];
+      var label = hoverLabel(loc);
+      var marker = L.marker(loc.coords, {
+        icon: pinIcon(loc),
+        keyboard: true,
+        riseOnHover: true,
+        alt: label
+      })
+        .addTo(map)
+        .bindTooltip(label, {
+          direction: "top",
+          offset: [0, -36],
+          opacity: 0.97,
+          className: "footprint-tooltip",
+          sticky: false,
+          permanent: false,
+          interactive: false
+        })
+        .bindPopup(popupHtml(loc), {
+          className: "footprint-popup",
+          maxWidth: 280,
+          autoPan: true,
+          autoPanPadding: [36, 36],
+          keepInView: true,
+          closeOnClick: false,
+          autoClose: true
+        });
+
+      marker.on("mouseover", function () {
+        showHoverTooltip(id);
+      });
+
+      marker.on("mouseout", function () {
+        marker.closeTooltip();
+      });
+
+      marker.on("click", function (e) {
+        L.DomEvent.stopPropagation(e);
+        setActive(id, false);
+      });
+
+      markers[id] = marker;
+      bounds.extend(loc.coords);
+
+      var el = marker.getElement();
+      if (el) {
+        el.setAttribute("tabindex", "0");
+        el.setAttribute("role", "button");
+        el.setAttribute("aria-label", label + ". Activate for full address and export details.");
+        el.setAttribute("aria-expanded", "false");
+        el.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            setActive(id, true);
+          }
+        });
+      }
+    });
+
+    map.on("click", function () {
+      if (suppressMapClose) return;
+      closeAllTooltips();
+      closeAllPopups();
+      activeId = "";
+      document.querySelectorAll(".footprint-card").forEach(function (card) {
+        card.classList.remove("is-active");
+        card.setAttribute("aria-pressed", "false");
+      });
+      Object.keys(markers).forEach(function (key) {
+        var el = markers[key].getElement();
+        if (el) {
+          el.classList.remove("is-active");
+          el.setAttribute("aria-expanded", "false");
+        }
+      });
+    });
+
+    map.on("popupopen", function (e) {
+      closeAllTooltips();
+      Object.keys(markers).forEach(function (key) {
+        if (markers[key].getPopup() !== e.popup) {
+          markers[key].closePopup();
+        }
+      });
+    });
+
+    document.querySelectorAll(".footprint-card").forEach(function (card) {
+      card.setAttribute("aria-pressed", "false");
+      function activate(e) {
+        if (e.target.closest("a")) return;
+        setActive(card.getAttribute("data-location"), true);
+      }
+      card.addEventListener("click", activate);
+      card.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          activate(e);
+        }
+      });
+    });
+
+    fitAll();
+    window.setTimeout(function () {
+      map.invalidateSize();
+      fitAll();
+    }, 180);
+
+    window.addEventListener("resize", function () {
+      map.invalidateSize();
+    });
+  })();
+
   document.querySelectorAll(".pd-tabs").forEach(function (tabs) {
     var buttons = tabs.querySelectorAll("[data-pd-tab]");
     var panels = document.querySelectorAll("[data-pd-panel]");

@@ -10,6 +10,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/site.css">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -119,7 +121,7 @@
     </section>
 
     <section class="section" id="contact">
-      <div class="container calm-contact">
+      <div class="container calm-contact rfq-only">
         <div>
           <p class="section-kicker">Enquiry</p>
           <h2>3-step bulk RFQ</h2>
@@ -204,30 +206,92 @@
             </div>
           </form>
         </div>
-        <aside class="address-stack">
-          <article>
-            <h3>Corporate office</h3>
-            <p>502, Malhotra Chambers, Deonar, Govandi (East), Maharashtra &ndash; 400 088, India</p>
-            <p><a href="tel:+912225550091">+91 22 2555 0091 / 92 / 93</a></p>
-          </article>
-          <article>
-            <h3>Ratnagiri</h3>
-            <p>Plot No G-19/20, MIDC Mirjole, Ratnagiri, Maharashtra - 415639</p>
-            <p><a href="tel:+9102352229653">+91 02352-229653</a></p>
-          </article>
-          <article>
-            <h3>Nashik</h3>
-            <p>Plot No CU-81, Additional Vinchur Industrial Area, Taluka Niphad, Vinchur, Nashik, Maharashtra - 422305</p>
-          </article>
-          <article>
-            <h3>Krishnagiri</h3>
-            <p>S.F. No.263/1, Bargur Thirupathur Road, Sigaralapally Post, Thalabanda Village, Bargur, Krishnagiri, Tamil Nadu &ndash; 635104</p>
-          </article>
-          <article>
-            <h3>Chittoor</h3>
-            <p>Chittoor processing units &mdash; street address available from the commercial desk on request.</p>
-          </article>
-        </aside>
+      </div>
+    </section>
+
+    <section class="section alt" id="footprint">
+      <div class="container">
+        <header class="section-head">
+          <div>
+            <p class="section-kicker">Contact us</p>
+            <h2>Processing Units &amp; Global Footprint</h2>
+            <p class="section-intro">Corporate HQ and four industrial campuses. Click a location card to fly the map to that plant, or tap a pin to highlight the matching site.</p>
+          </div>
+        </header>
+        <div class="footprint-layout">
+          <div class="footprint-cards" role="list" aria-label="Operational locations">
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="hq">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">01</span>
+                <div>
+                  <p class="footprint-card-kicker">Corporate HQ</p>
+                  <h3>Corporate Office</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">502, Malhotra Chambers, Deonar, Govandi (East), Mumbai, Maharashtra – 400 088, India</p>
+              <p class="footprint-card-meta"><a href="tel:+912225550091">+91 22 2555 0091 / 92 / 93</a></p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Global Export HQ / JNPT Connection</span>
+            </article>
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="ratnagiri">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">02</span>
+                <div>
+                  <p class="footprint-card-kicker">Processing unit</p>
+                  <h3>Ratnagiri</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">Plot No G-19/20, MIDC Mirjole, Ratnagiri, Maharashtra – 415639, India</p>
+              <p class="footprint-card-meta"><a href="tel:+9102352229653">+91 02352-229653</a></p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Alphonso Mango &amp; Guava Belt | JNPT Port</span>
+            </article>
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="nashik">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">03</span>
+                <div>
+                  <p class="footprint-card-kicker">Processing unit</p>
+                  <h3>Nashik</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">Plot No CU-81, Additional Vinchur Industrial Area, Niphad, Vinchur, Nashik, Maharashtra – 422305, India</p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Tomato &amp; Pomegranate Belt | JNPT Port</span>
+            </article>
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="krishnagiri">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">04</span>
+                <div>
+                  <p class="footprint-card-kicker">Processing unit</p>
+                  <h3>Krishnagiri</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">S.F. No.263/1, Bargur Thirupathur Road, Sigaralapally Post, Bargur, Krishnagiri, Tamil Nadu – 635104, India</p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Totapuri Mango Belt | Chennai Port</span>
+            </article>
+            <article class="footprint-card" role="listitem" tabindex="0" data-location="chittoor">
+              <div class="footprint-card-head">
+                <span class="footprint-card-index">05</span>
+                <div>
+                  <p class="footprint-card-kicker">Processing unit</p>
+                  <h3>Chittoor</h3>
+                </div>
+              </div>
+              <p class="footprint-card-address">Industrial Estate, Chittoor, Andhra Pradesh – 517001, India</p>
+              <p class="footprint-card-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+              <span class="footprint-card-tag">Tropical Fruit Processing | Chennai Port</span>
+            </article>
+          </div>
+          <div class="footprint-map-panel">
+            <div class="footprint-map-toolbar">
+              <p>Interactive plant map</p>
+            </div>
+            <div class="footprint-map-wrap">
+              <div id="map" role="region" aria-label="Operational locations across India"></div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
   </main>
