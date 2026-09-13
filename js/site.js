@@ -1061,13 +1061,17 @@
       if (!exceptId) map.closePopup();
     }
 
-    function bestTooltipDirection(marker) {
+    function bestTooltipDirection(id, marker) {
+      // Nashik sits near the top edge in the India overview — keep its label to the right.
+      if (id === "nashik") return "right";
+
       var pt = map.latLngToContainerPoint(marker.getLatLng());
       var size = map.getSize();
       var edgeX = 140;
       var edgeTop = 96;
       var edgeBottom = 64;
-      if (pt.y < edgeTop) return "bottom";
+
+      if (pt.y < edgeTop) return "right";
       if (pt.y > size.y - edgeBottom) return "top";
       if (pt.x > size.x - edgeX) return "left";
       if (pt.x < edgeX) return "right";
@@ -1076,8 +1080,8 @@
 
     function tooltipOffset(direction) {
       if (direction === "bottom") return [0, 12];
-      if (direction === "left") return [-12, -20];
-      if (direction === "right") return [12, -20];
+      if (direction === "left") return [-14, -18];
+      if (direction === "right") return [16, -18];
       return [0, -40];
     }
 
@@ -1094,7 +1098,7 @@
       closeAllPopups();
       closeAllTooltips();
 
-      var direction = bestTooltipDirection(marker);
+      var direction = bestTooltipDirection(id, marker);
       var label = hoverLabel(loc);
 
       if (marker.getTooltip()) marker.unbindTooltip();
