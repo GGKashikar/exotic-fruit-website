@@ -3673,9 +3673,9 @@ body.is-home .home-link {
 }
 
 .footprint-marker {
-  background: transparent;
-  border: 0;
-  overflow: visible;
+  background: transparent !important;
+  border: 0 !important;
+  overflow: visible !important;
 }
 
 .footprint-pin {
@@ -3685,6 +3685,7 @@ body.is-home .home-link {
   width: 28px;
   height: 36px;
   margin-left: -14px;
+  pointer-events: none;
   filter: drop-shadow(0 8px 10px rgba(10, 30, 23, 0.28));
 }
 
@@ -3729,7 +3730,7 @@ body.is-home .home-link {
 .footprint-pin-name {
   position: absolute;
   left: 50%;
-  top: 28px;
+  top: 34px;
   transform: translateX(-50%);
   white-space: nowrap;
   background: rgba(10, 30, 23, 0.9);
@@ -3740,6 +3741,7 @@ body.is-home .home-link {
   padding: 2px 6px;
   border-radius: 999px;
   pointer-events: none;
+  z-index: 1;
 }
 
 .footprint-popup .leaflet-popup-content-wrapper {

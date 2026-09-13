@@ -997,10 +997,12 @@
     function pinIcon(loc) {
       return L.divIcon({
         className: "footprint-marker" + (loc.kind === "hq" ? " is-hq" : ""),
-        html: '<span class="footprint-pin" aria-hidden="true"></span><span class="footprint-pin-name" aria-hidden="true">' + loc.short + "</span>",
-        iconSize: [92, 56],
-        iconAnchor: [46, 36],
-        popupAnchor: [0, -38]
+        html:
+          '<span class="footprint-pin" aria-hidden="true"></span>' +
+          '<span class="footprint-pin-name" aria-hidden="true">' + loc.short + "</span>",
+        iconSize: [28, 40],
+        iconAnchor: [14, 36],
+        popupAnchor: [0, -36]
       });
     }
 
@@ -1038,8 +1040,8 @@
 
     function fitAll() {
       map.fitBounds(bounds, {
-        paddingTopLeft: [18, 18],
-        paddingBottomRight: [28, 18],
+        paddingTopLeft: [56, 72],
+        paddingBottomRight: [40, 40],
         maxZoom: 6
       });
     }
@@ -1062,42 +1064,50 @@
     function bestTooltipDirection(marker) {
       var pt = map.latLngToContainerPoint(marker.getLatLng());
       var size = map.getSize();
-      var edgeX = 120;
-      var edgeY = 56;
-      if (pt.y < edgeY) return "bottom";
+      var edgeX = 140;
+      var edgeTop = 96;
+      var edgeBottom = 64;
+      if (pt.y < edgeTop) return "bottom";
+      if (pt.y > size.y - edgeBottom) return "top";
       if (pt.x > size.x - edgeX) return "left";
       if (pt.x < edgeX) return "right";
       return "top";
     }
 
     function tooltipOffset(direction) {
-      if (direction === "bottom") return [0, 8];
-      if (direction === "left") return [-14, -18];
-      if (direction === "right") return [14, -18];
-      return [0, -36];
+      if (direction === "bottom") return [0, 12];
+      if (direction === "left") return [-12, -20];
+      if (direction === "right") return [12, -20];
+      return [0, -40];
     }
 
     function showHoverTooltip(id) {
       var marker = markers[id];
-      if (!marker) return;
+      var loc = locations[id];
+      if (!marker || !loc) return;
+
+      marker.setZIndexOffset(1000);
+      Object.keys(markers).forEach(function (key) {
+        if (key !== id) markers[key].setZIndexOffset(0);
+      });
 
       closeAllPopups();
-      closeAllTooltips(id);
+      closeAllTooltips();
 
       var direction = bestTooltipDirection(marker);
-      var tooltip = marker.getTooltip();
-      if (tooltip) {
-        tooltip.options.direction = direction;
-        tooltip.options.offset = tooltipOffset(direction);
-      }
+      var label = hoverLabel(loc);
 
-      marker.openTooltip();
-      map.panInside(marker.getLatLng(), {
-        paddingTopLeft: [28, 48],
-        paddingBottomRight: [28, 48],
-        animate: true,
-        duration: 0.2
+      if (marker.getTooltip()) marker.unbindTooltip();
+      marker.bindTooltip(label, {
+        direction: direction,
+        offset: tooltipOffset(direction),
+        opacity: 0.97,
+        className: "footprint-tooltip",
+        sticky: false,
+        permanent: false,
+        interactive: false
       });
+      marker.openTooltip();
     }
 
     function highlightCards(id, scrollIntoView) {
@@ -1159,23 +1169,15 @@
         icon: pinIcon(loc),
         keyboard: true,
         riseOnHover: true,
+        bubblingMouseEvents: false,
         alt: label
       })
         .addTo(map)
-        .bindTooltip(label, {
-          direction: "top",
-          offset: [0, -36],
-          opacity: 0.97,
-          className: "footprint-tooltip",
-          sticky: false,
-          permanent: false,
-          interactive: false
-        })
         .bindPopup(popupHtml(loc), {
           className: "footprint-popup",
           maxWidth: 280,
           autoPan: true,
-          autoPanPadding: [36, 36],
+          autoPanPadding: [48, 48],
           keepInView: true,
           closeOnClick: false,
           autoClose: true
@@ -1187,10 +1189,16 @@
 
       marker.on("mouseout", function () {
         marker.closeTooltip();
+        if (activeId !== id) marker.setZIndexOffset(0);
       });
 
       marker.on("click", function (e) {
         L.DomEvent.stopPropagation(e);
+        marker.closeTooltip();
+        marker.setZIndexOffset(1000);
+        Object.keys(markers).forEach(function (key) {
+          if (key !== id) markers[key].setZIndexOffset(0);
+        });
         setActive(id, false);
       });
 
