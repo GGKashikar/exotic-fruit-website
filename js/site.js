@@ -711,6 +711,29 @@
     step.addEventListener("click", activate);
   });
 
+  /* From Farm to Factory — scroll reveal */
+  (function initFarmJourney() {
+    var root = document.getElementById("pipeline");
+    if (!root) return;
+    var stages = root.querySelectorAll("[data-farm-stage]");
+    if (!stages.length) return;
+
+    if (!("IntersectionObserver" in window)) {
+      stages.forEach(function (stage) { stage.classList.add("is-visible"); });
+      return;
+    }
+
+    var observer = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("is-visible");
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.22, rootMargin: "0px 0px -8% 0px" });
+
+    stages.forEach(function (stage) { observer.observe(stage); });
+  })();
   /* Drawer: max 3 fruit checkboxes */
   var fruitChecks = document.querySelectorAll('#fruit-checks input[name="fruit"]');
   function syncFruitLimit() {
@@ -917,10 +940,14 @@
     start();
   })();
 
-  /* Interactive processing-unit map (Leaflet) */
+  /* Interactive processing-unit map (Leaflet) — cards + map as one component */
   (function initFootprintMap() {
     var mapEl = document.getElementById("map");
     if (!mapEl || typeof L === "undefined") return;
+
+    var cardSelector = document.querySelector(".footprint-flip-card")
+      ? ".footprint-flip-card"
+      : ".footprint-card";
 
     var locations = {
       hq: {
@@ -995,48 +1022,37 @@
     }
 
     function pinIcon(loc) {
+      if (loc.kind === "hq") {
+        return L.divIcon({
+          className: "footprint-marker is-hq is-star",
+          html: '<span class="footprint-star" aria-hidden="true">★</span>',
+          iconSize: [28, 28],
+          iconAnchor: [14, 14]
+        });
+      }
       return L.divIcon({
-        className: "footprint-marker" + (loc.kind === "hq" ? " is-hq" : ""),
-        html:
-          '<span class="footprint-pin" aria-hidden="true"></span>' +
-          '<span class="footprint-pin-name" aria-hidden="true">' + loc.short + "</span>",
-        iconSize: [28, 40],
-        iconAnchor: [14, 36],
-        popupAnchor: [0, -36]
+        className: "footprint-marker",
+        html: '<span class="footprint-pin" aria-hidden="true"></span>',
+        iconSize: [28, 36],
+        iconAnchor: [14, 34]
       });
-    }
-
-    function popupHtml(loc) {
-      var phoneLine = loc.phone
-        ? '<p><a href="' + loc.phoneHref + '">' + loc.phone + "</a></p>"
-        : "";
-      return (
-        '<div class="footprint-popup-inner">' +
-        '<p class="footprint-popup-kicker">' + (loc.kind === "hq" ? "Corporate HQ" : "Processing unit") + "</p>" +
-        "<h3>" + loc.name + "</h3>" +
-        "<p>" + loc.address + "</p>" +
-        phoneLine +
-        '<a href="mailto:' + loc.email + '">' + loc.email + "</a>" +
-        '<div><span class="footprint-popup-tag">' + loc.tag + "</span></div>" +
-        "</div>"
-      );
     }
 
     var map = L.map(mapEl, {
       scrollWheelZoom: true,
-      zoomControl: true,
-      closePopupOnClick: true
+      zoomControl: true
     });
 
     L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
       maxZoom: 19,
-      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+      attribution:
+        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
     }).addTo(map);
 
     var markers = {};
     var bounds = L.latLngBounds([]);
     var activeId = "";
-    var suppressMapClose = false;
+    var cards = document.querySelectorAll(cardSelector);
 
     function fitAll() {
       map.fitBounds(bounds, {
@@ -1051,14 +1067,6 @@
         if (exceptId && key === exceptId) return;
         markers[key].closeTooltip();
       });
-    }
-
-    function closeAllPopups(exceptId) {
-      Object.keys(markers).forEach(function (key) {
-        if (exceptId && key === exceptId) return;
-        markers[key].closePopup();
-      });
-      if (!exceptId) map.closePopup();
     }
 
     function bestTooltipDirection(id, marker) {
@@ -1095,7 +1103,6 @@
         if (key !== id) markers[key].setZIndexOffset(0);
       });
 
-      closeAllPopups();
       closeAllTooltips();
 
       var direction = bestTooltipDirection(id, marker);
@@ -1115,9 +1122,10 @@
     }
 
     function highlightCards(id, scrollIntoView) {
-      document.querySelectorAll(".footprint-card").forEach(function (card) {
+      cards.forEach(function (card) {
         var on = card.getAttribute("data-location") === id;
         card.classList.toggle("is-active", on);
+        card.classList.toggle("is-flipped", on);
         card.setAttribute("aria-pressed", on ? "true" : "false");
         if (on && scrollIntoView) {
           card.scrollIntoView({ behavior: "smooth", block: "nearest" });
@@ -1130,6 +1138,24 @@
           el.classList.toggle("is-active", key === id);
           el.setAttribute("aria-expanded", key === id ? "true" : "false");
         }
+        markers[key].setZIndexOffset(key === id ? 1000 : 0);
+      });
+    }
+
+    function clearActive() {
+      activeId = "";
+      closeAllTooltips();
+      cards.forEach(function (card) {
+        card.classList.remove("is-active", "is-flipped");
+        card.setAttribute("aria-pressed", "false");
+      });
+      Object.keys(markers).forEach(function (key) {
+        var el = markers[key].getElement();
+        if (el) {
+          el.classList.remove("is-active");
+          el.setAttribute("aria-expanded", "false");
+        }
+        markers[key].setZIndexOffset(0);
       });
     }
 
@@ -1140,29 +1166,17 @@
 
       activeId = id;
       closeAllTooltips();
-      closeAllPopups(id);
       highlightCards(id, !fly);
 
-      suppressMapClose = true;
       if (fly) {
-        map.flyTo(loc.coords, loc.zoom, { duration: 1.15 });
-        map.once("moveend", function () {
-          marker.openPopup();
-          window.setTimeout(function () {
-            suppressMapClose = false;
-          }, 50);
-        });
+        map.flyTo(loc.coords, loc.zoom, { duration: 1.1 });
       } else {
         map.panInside(marker.getLatLng(), {
-          paddingTopLeft: [40, 72],
-          paddingBottomRight: [40, 72],
+          paddingTopLeft: [48, 80],
+          paddingBottomRight: [48, 48],
           animate: true,
-          duration: 0.25
+          duration: 0.3
         });
-        marker.openPopup();
-        window.setTimeout(function () {
-          suppressMapClose = false;
-        }, 50);
       }
     }
 
@@ -1175,35 +1189,29 @@
         riseOnHover: true,
         bubblingMouseEvents: false,
         alt: label
-      })
-        .addTo(map)
-        .bindPopup(popupHtml(loc), {
-          className: "footprint-popup",
-          maxWidth: 280,
-          autoPan: true,
-          autoPanPadding: [48, 48],
-          keepInView: true,
-          closeOnClick: false,
-          autoClose: true
-        });
+      }).addTo(map);
 
       marker.on("mouseover", function () {
         showHoverTooltip(id);
+        if (activeId !== id) {
+          cards.forEach(function (card) {
+            card.classList.toggle("is-linked", card.getAttribute("data-location") === id);
+          });
+        }
       });
 
       marker.on("mouseout", function () {
         marker.closeTooltip();
+        cards.forEach(function (card) {
+          card.classList.remove("is-linked");
+        });
         if (activeId !== id) marker.setZIndexOffset(0);
       });
 
       marker.on("click", function (e) {
         L.DomEvent.stopPropagation(e);
         marker.closeTooltip();
-        marker.setZIndexOffset(1000);
-        Object.keys(markers).forEach(function (key) {
-          if (key !== id) markers[key].setZIndexOffset(0);
-        });
-        setActive(id, false);
+        setActive(id, true);
       });
 
       markers[id] = marker;
@@ -1224,44 +1232,36 @@
       }
     });
 
-    map.on("click", function () {
-      if (suppressMapClose) return;
-      closeAllTooltips();
-      closeAllPopups();
-      activeId = "";
-      document.querySelectorAll(".footprint-card").forEach(function (card) {
-        card.classList.remove("is-active");
-        card.setAttribute("aria-pressed", "false");
-      });
-      Object.keys(markers).forEach(function (key) {
-        var el = markers[key].getElement();
-        if (el) {
-          el.classList.remove("is-active");
-          el.setAttribute("aria-expanded", "false");
-        }
-      });
-    });
+    map.on("click", clearActive);
 
-    map.on("popupopen", function (e) {
-      closeAllTooltips();
-      Object.keys(markers).forEach(function (key) {
-        if (markers[key].getPopup() !== e.popup) {
-          markers[key].closePopup();
-        }
-      });
-    });
-
-    document.querySelectorAll(".footprint-card").forEach(function (card) {
+    cards.forEach(function (card) {
       card.setAttribute("aria-pressed", "false");
-      function activate(e) {
+      var locId = card.getAttribute("data-location");
+
+      card.addEventListener("mouseenter", function () {
+        if (markers[locId]) showHoverTooltip(locId);
+      });
+
+      card.addEventListener("mouseleave", function () {
+        if (markers[locId]) markers[locId].closeTooltip();
+      });
+
+      card.addEventListener("click", function (e) {
         if (e.target.closest("a")) return;
-        setActive(card.getAttribute("data-location"), true);
-      }
-      card.addEventListener("click", activate);
+        var id = card.getAttribute("data-location");
+        if (activeId === id) {
+          clearActive();
+          fitAll();
+          return;
+        }
+        setActive(id, true);
+      });
+
       card.addEventListener("keydown", function (e) {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          activate(e);
+          if (e.target.closest("a")) return;
+          setActive(card.getAttribute("data-location"), true);
         }
       });
     });
