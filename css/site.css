@@ -4416,7 +4416,7 @@ body.is-home .home-link {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 28px;
+  gap: 20px;
   position: relative;
   z-index: 1;
 }
@@ -4426,11 +4426,12 @@ body.is-home .home-link {
   grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
   gap: 0;
   align-items: stretch;
-  border-radius: 22px;
+  min-height: 260px;
+  border-radius: 20px;
   overflow: hidden;
   background: rgba(255, 255, 255, 0.7);
   border: 1px solid rgba(19, 56, 44, 0.1);
-  box-shadow: 0 16px 36px rgba(40, 70, 55, 0.08);
+  box-shadow: 0 14px 32px rgba(40, 70, 55, 0.08);
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.7s ease, transform 0.7s ease, box-shadow 0.35s ease;
@@ -4442,7 +4443,7 @@ body.is-home .home-link {
 }
 
 .farm-stage:hover {
-  box-shadow: 0 22px 44px rgba(40, 70, 55, 0.14);
+  box-shadow: 0 20px 40px rgba(40, 70, 55, 0.14);
 }
 
 .farm-stage--reverse {
@@ -4460,11 +4461,14 @@ body.is-home .home-link {
 .farm-stage-media {
   position: relative;
   min-height: 260px;
+  align-self: stretch;
   overflow: hidden;
   background: #1f4a3a;
 }
 
 .farm-stage-media img {
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -4473,6 +4477,40 @@ body.is-home .home-link {
 }
 
 .farm-stage:hover .farm-stage-media img {
+  transform: scale(1.06);
+}
+
+/* Single-image leaf/fruit depth: primary photo peeks slightly past the frame */
+.farm-stage--fruit-pop {
+  overflow: visible;
+}
+
+.farm-stage--fruit-pop:hover {
+  z-index: 3;
+}
+
+.farm-stage--fruit-pop .farm-stage-media {
+  overflow: visible;
+}
+
+.farm-stage--fruit-pop .farm-stage-media img {
+  width: calc(100% + 14px);
+  height: calc(100% + 12px);
+  max-width: none;
+  inset: auto;
+  top: -8px;
+  left: -4px;
+  right: auto;
+  bottom: auto;
+  filter: drop-shadow(0 6px 10px rgba(19, 56, 44, 0.12));
+}
+
+.farm-stage--reverse.farm-stage--fruit-pop .farm-stage-media img {
+  left: auto;
+  right: -6px;
+}
+
+.farm-stage--fruit-pop:hover .farm-stage-media img {
   transform: scale(1.05);
 }
 
@@ -4480,6 +4518,7 @@ body.is-home .home-link {
   position: absolute;
   left: 14px;
   bottom: 14px;
+  z-index: 2;
   padding: 7px 11px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.93);
@@ -4491,11 +4530,11 @@ body.is-home .home-link {
 }
 
 .farm-stage-copy {
-  padding: 28px 30px;
+  padding: 24px 26px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .farm-stage-kicker {
@@ -4570,6 +4609,11 @@ body.is-home .home-link {
     opacity: 1;
     transform: none;
   }
+
+  .farm-stage:hover .farm-stage-media img,
+  .farm-stage--fruit-pop:hover .farm-stage-media img {
+    transform: none;
+  }
 }
 
 @media (max-width: 980px) {
@@ -4589,7 +4633,45 @@ body.is-home .home-link {
 
   .farm-stage-media {
     min-height: 220px;
-    max-height: 260px;
+    height: 220px;
+    max-height: 220px;
+  }
+
+  .farm-stage--fruit-pop {
+    overflow: hidden;
+  }
+
+  .farm-stage--fruit-pop .farm-stage-media {
+    overflow: hidden;
+  }
+
+  .farm-stage--fruit-pop .farm-stage-media img {
+    width: 100%;
+    height: 100%;
+    inset: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    filter: none;
+  }
+}
+
+@media (min-width: 981px) {
+  .farm-stage {
+    min-height: 300px;
+  }
+
+  .farm-stage-media {
+    min-height: 300px;
+  }
+
+  .farm-stage--pulp .farm-stage-media {
+    min-height: 320px;
+  }
+
+  .farm-stage--pulp {
+    min-height: 320px;
   }
 }
 
@@ -4763,8 +4845,83 @@ body.is-home .home-link {
 }
 
 .farm-stage-media--light img {
+  object-fit: cover;
+  object-position: center 42%;
+  padding: 0;
+}
+
+/* Isolated pulp/puree product presentation (Stage 05) */
+.farm-stage--pulp-isolate {
+  overflow: hidden;
+}
+
+.farm-stage-media--isolate {
+  background:
+    radial-gradient(ellipse at 50% 42%, rgba(255, 255, 255, 0.95), transparent 62%),
+    linear-gradient(165deg, #fbfaf8 0%, #f1eee7 100%);
+}
+
+.farm-stage-media--isolate img {
   object-fit: contain;
-  padding: 18px;
+  object-position: center center;
+  padding: 10px 14px 18px;
+  width: 100%;
+  height: 100%;
+  inset: 0;
+  filter: drop-shadow(0 10px 18px rgba(40, 55, 40, 0.12));
+  transition: transform 0.7s ease, filter 0.7s ease;
+}
+
+.farm-stage--pulp-isolate:hover .farm-stage-media--isolate img {
+  transform: scale(1.05);
+  filter: drop-shadow(0 14px 22px rgba(40, 55, 40, 0.16));
+}
+
+.farm-journey {
+  overflow-x: clip;
+}
+
+.farm-img-procure {
+  object-position: center 42%;
+}
+
+.farm-img-quality {
+  object-position: center 45%;
+}
+
+.farm-img-pulp {
+  object-fit: cover;
+  object-position: center 36%;
+}
+
+.farm-stage--pulp .farm-stage-media img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+}
+
+.farm-img-cans {
+  object-position: center 50%;
+}
+
+.farm-img-global {
+  object-fit: cover;
+  object-position: 48% 40%;
+}
+
+.farm-stage--finale .farm-stage-media img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.farm-img-origin {
+  object-position: center 40%;
+}
+
+.farm-img-process {
+  object-position: center 42%;
 }
 
 .farm-journey-kicker {
@@ -4841,19 +4998,20 @@ body.is-home .home-link {
 .plant-port-flow {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 12px;
+  gap: 14px;
   position: relative;
 }
 
 .plant-port-flow::before {
   content: "";
   position: absolute;
-  top: 46px;
-  left: 6%;
-  right: 6%;
+  top: calc(14px + 24px);
+  left: calc((100% - 4 * 14px) / 10);
+  right: calc((100% - 4 * 14px) / 10);
   height: 2px;
-  background: linear-gradient(90deg, rgba(242, 140, 40, 0.2), rgba(242, 140, 40, 0.75), rgba(242, 140, 40, 0.2));
+  background: rgba(242, 140, 40, 0.55);
   z-index: 0;
+  pointer-events: none;
 }
 
 .plant-port-step {
@@ -4877,15 +5035,18 @@ body.is-home .home-link {
 }
 
 .plant-port-icon {
+  position: relative;
+  z-index: 2;
   display: grid;
   place-items: center;
   width: 44px;
   height: 44px;
   margin-bottom: 10px;
   border-radius: 10px;
-  background: rgba(10, 30, 23, 0.55);
+  background: #102820;
   color: var(--amber-accent);
-  border: 1px solid rgba(242, 140, 40, 0.35);
+  border: 1px solid rgba(242, 140, 40, 0.45);
+  box-shadow: 0 0 0 5px #13382c;
 }
 
 .plant-port-step .pipe-num {
@@ -4941,7 +5102,7 @@ body.is-home .home-link {
 }
 
 .harvest-teaser {
-  margin-top: 18px;
+  margin-top: 0;
 }
 
 .cta-journey {
@@ -5117,11 +5278,11 @@ body.is-home .home-link {
 }
 
 .farm-journey {
-  padding: 56px 0 48px;
+  padding: 50px 0 44px;
 }
 
 .farm-journey-head {
-  margin-bottom: 28px;
+  margin-bottom: 22px;
 }
 
 .farm-stage {
@@ -5129,20 +5290,20 @@ body.is-home .home-link {
 }
 
 .farm-stage-media {
-  min-height: 220px;
+  min-height: 260px;
 }
 
 .farm-stage-copy {
-  padding: 22px 24px;
-  gap: 8px;
+  padding: 18px 22px;
+  gap: 6px;
 }
 
 .farm-stage-copy h3 {
-  font-size: clamp(1.25rem, 2vw, 1.55rem);
+  font-size: clamp(1.22rem, 2vw, 1.55rem);
 }
 
 .farm-journey-stages {
-  gap: 20px;
+  gap: 18px;
 }
 
 .plant-port {
@@ -5246,5 +5407,213 @@ body.is-home .home-link {
 
   .log-stat {
     font-size: 2rem !important;
+  }
+}
+
+/* ========== CROSS-DEVICE LAYOUT HARDENING ========== */
+html,
+body {
+  overflow-x: clip;
+  max-width: 100%;
+}
+
+iframe,
+video {
+  max-width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .utility-inner {
+    gap: 10px;
+  }
+
+  .utility-left {
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .utility-left::-webkit-scrollbar {
+    display: none;
+  }
+
+  .plant-port-flow {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .plant-port-flow::before {
+    display: none;
+  }
+
+  .applications-section .app-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 980px) {
+  :root {
+    --wrap: min(100%, calc(100% - 32px));
+    --header-h: 64px;
+  }
+
+  .farm-stage,
+  .farm-stage--pulp,
+  .farm-stage--finale {
+    min-height: 0;
+  }
+
+  .farm-stage-media,
+  .farm-stage--pulp .farm-stage-media {
+    min-height: 240px;
+    height: 240px;
+    max-height: 240px;
+  }
+
+  .farm-img-pulp {
+    object-position: center 34%;
+  }
+
+  .farm-img-global {
+    object-position: 50% 38%;
+  }
+
+  .farm-stage-meta {
+    gap: 6px;
+  }
+
+  .farm-stage-meta li {
+    font-size: 0.68rem;
+    padding: 5px 8px;
+  }
+
+  .farm-journey-leaf {
+    display: none;
+  }
+
+  .hero-fruit-accent {
+    width: min(120px, 22vw);
+    opacity: 0.72;
+  }
+
+  .story-bridge-inner {
+    justify-content: flex-start;
+    gap: 6px 4px;
+  }
+
+  .story-bridge-inner span {
+    white-space: normal;
+  }
+
+  .plant-port-rail {
+    gap: 6px;
+  }
+
+  .btn,
+  .btn-primary,
+  .btn-secondary,
+  .cta-btn {
+    white-space: normal;
+    text-align: center;
+  }
+}
+
+@media (max-width: 720px) {
+  :root {
+    --wrap: min(100%, calc(100% - 24px));
+  }
+
+  .applications-section .app-grid,
+  .plant-port-flow,
+  .trust-metrics,
+  .footer-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-actions {
+    flex-wrap: wrap;
+    width: 100%;
+  }
+
+  .hero-actions .btn-primary,
+  .hero-actions .btn-secondary {
+    flex: 1 1 auto;
+    min-width: min(100%, 160px);
+  }
+
+  .farm-stage-media,
+  .farm-stage--pulp .farm-stage-media {
+    min-height: 210px;
+    height: 210px;
+    max-height: 210px;
+  }
+
+  .farm-stage-copy {
+    padding: 18px 16px;
+  }
+
+  .farm-stage-copy h3 {
+    font-size: clamp(1.15rem, 5vw, 1.4rem);
+  }
+
+  .farm-stage-copy > p {
+    font-size: 0.9rem;
+  }
+
+  .section-head h2,
+  .farm-journey-head h2 {
+    font-size: clamp(1.55rem, 7vw, 2.1rem);
+  }
+
+  .plant-port {
+    padding: 40px 0 36px;
+  }
+
+  .applications-section {
+    padding-top: 40px;
+    padding-bottom: 36px;
+  }
+
+  .hero-fruit-accent,
+  .hero-flow {
+    display: none;
+  }
+}
+
+@media (max-width: 480px) {
+  :root {
+    --wrap: min(100%, calc(100% - 20px));
+    --header-h: 60px;
+  }
+
+  .utility-bar {
+    display: none;
+  }
+
+  .farm-stage-media,
+  .farm-stage--pulp .farm-stage-media {
+    min-height: 190px;
+    height: 190px;
+    max-height: 190px;
+  }
+
+  .farm-stage-badge {
+    left: 10px;
+    bottom: 10px;
+    font-size: 0.62rem;
+    padding: 6px 9px;
+  }
+
+  .farm-stage-meta li {
+    font-size: 0.64rem;
+  }
+
+  .header-actions .btn-primary {
+    padding: 7px 12px;
+    font-size: 0.8rem;
+  }
+
+  .site-footer,
+  .footer-grid {
+    text-align: left;
   }
 }

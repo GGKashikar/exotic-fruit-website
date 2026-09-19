@@ -75,9 +75,11 @@
             <div class="mega" role="menu">
               <p class="mega-kicker">Operations</p>
               <div class="mega-grid">
-                <a href="supply-chain.html#plants">Processing Units <span>4 industrial campuses</span></a>
+                <a href="supply-chain.html#packaging">Bulk Logistics <span>FCL packaging payloads</span></a>
+                <a href="supply-chain.html#procurement">Procurement &amp; Harvest <span>Peak crop planning</span></a>
                 <a href="supply-chain.html#calendar">Crop Calendar <span>12-month windows</span></a>
-                <a href="supply-chain.html#logistics">Logistics <span>FCL loading calculator</span></a>
+                <a href="supply-chain.html#plants">Processing Units <span>4 industrial campuses</span></a>
+                <a href="supply-chain.html#logistics">FCL Calculator <span>Payload planner</span></a>
               </div>
             </div>
           </li>
@@ -319,7 +321,12 @@
         <ol class="farm-journey-stages">
           <li class="farm-stage" data-farm-stage>
             <div class="farm-stage-media">
-              <img src="img/story/mango-harvest.png" alt="Fresh mangoes from Indian tropical fruit belts">
+              <img
+                src="img/story/mango-orchard-temp.png"
+                alt="Mango orchard in an Indian fruit-growing region"
+                class="farm-img-origin"
+                data-replaceable-asset="mango-orchard"
+              >
               <span class="farm-stage-badge">01 &middot; Farmers &amp; fruit belts</span>
             </div>
             <div class="farm-stage-copy">
@@ -335,14 +342,18 @@
             </div>
           </li>
 
-          <li class="farm-stage farm-stage--reverse" data-farm-stage>
-            <div class="farm-stage-media farm-stage-media--light">
-              <img src="img/story/mango-pair.png" alt="Ripe tropical mangoes ready for procurement">
+          <li class="farm-stage farm-stage--reverse farm-stage--fruit-pop" data-farm-stage>
+            <div class="farm-stage-media">
+              <img
+                src="img/story/mango-procurement.png"
+                alt="Freshly harvested mangoes prepared for industrial procurement"
+                class="farm-img-procure"
+              >
               <span class="farm-stage-badge">02 &middot; Fresh procurement</span>
             </div>
             <div class="farm-stage-copy">
               <p class="farm-stage-kicker">Fresh fruit procurement</p>
-              <h3>Fruit selected for processing</h3>
+              <h3>Freshly harvested</h3>
               <p>Fresh fruit is procured from these growing regions and prepared for industrial handling &mdash; the first step from orchard crop to manufacturing ingredient.</p>
               <ul class="farm-stage-meta">
                 <li>Mango</li>
@@ -356,12 +367,16 @@
 
           <li class="farm-stage farm-stage--transform" data-farm-stage>
             <div class="farm-stage-media">
-              <img src="img/parallax/EFRTN-1.jpg" alt="Exotic Fruits processing plant campus">
+              <img
+                src="img/story/fruit-processing-plant.png"
+                alt="Stainless-steel fruit processing equipment"
+                class="farm-img-process"
+              >
               <span class="farm-stage-badge">03 &middot; Sorting &amp; processing</span>
             </div>
             <div class="farm-stage-copy">
               <p class="farm-stage-kicker">Sorting &amp; processing</p>
-              <h3>Where Exotic adds value</h3>
+              <h3>From fruit to puree</h3>
               <p>At strategically located plants, fresh tropical fruit is sorted and processed on industrial lines &mdash; the transformation point from whole fruit into pulp and puree bases.</p>
               <ul class="farm-stage-meta">
                 <li>Sorting</li>
@@ -372,9 +387,9 @@
             </div>
           </li>
 
-          <li class="farm-stage farm-stage--reverse" data-farm-stage>
-            <div class="farm-stage-media">
-              <img src="img/EFKGR-2.jpg" alt="Exotic Fruits processing campus supporting quality release">
+          <li class="farm-stage farm-stage--reverse farm-stage--fruit-pop" data-farm-stage>
+            <div class="farm-stage-media farm-stage-media--light">
+              <img src="img/story/guava-quality.png" alt="Fresh guava representing product quality before release" class="farm-img-quality">
               <span class="farm-stage-badge">04 &middot; Quality control</span>
             </div>
             <div class="farm-stage-copy">
@@ -389,26 +404,37 @@
             </div>
           </li>
 
-          <li class="farm-stage" data-farm-stage>
+          <li class="farm-stage farm-stage--pulp" data-farm-stage>
             <div class="farm-stage-media">
-              <img src="img/story/fruit-platter.png" alt="Prepared tropical fruit for pulp and concentrate ingredients">
+              <img
+                src="img/story/mango-pulp.png"
+                alt="Mango pulp and puree as standardized industrial ingredients"
+                class="farm-img-pulp"
+              >
               <span class="farm-stage-badge">05 &middot; Pulp &amp; concentrate</span>
             </div>
             <div class="farm-stage-copy">
               <p class="farm-stage-kicker">Pulp &amp; concentrate</p>
-              <h3>Standardized industrial ingredients</h3>
+              <h3>Standardized ingredients</h3>
               <p>Fresh fruit becomes pulp, puree, and concentrate specified for industrial manufacturing &mdash; the core value Exotic Fruits delivers to factory buyers.</p>
               <ul class="farm-stage-meta">
-                <li>Pulp</li>
-                <li>Puree</li>
-                <li>Concentrate</li>
+                <li>Mango pulp</li>
+                <li>Guava puree</li>
+                <li>Papaya puree</li>
+                <li>Tomato paste</li>
+                <li>Pomegranate NFC</li>
               </ul>
             </div>
           </li>
 
           <li class="farm-stage farm-stage--reverse" data-farm-stage>
             <div class="farm-stage-media">
-              <img src="img/EFKGR-1.jpg" alt="Processing campus for bulk industrial packaging">
+              <img
+                src="img/story/finished-cans-temp.png"
+                alt="Industrial canned fruit formats ready for manufacturing lines"
+                class="farm-img-cans"
+                data-replaceable-asset="finished-cans"
+              >
               <span class="farm-stage-badge">06 &middot; Finished formats</span>
             </div>
             <div class="farm-stage-copy">
@@ -426,7 +452,12 @@
 
           <li class="farm-stage farm-stage--finale" data-farm-stage>
             <div class="farm-stage-media">
-              <img src="img/products/pomegranate.jpg" alt="Tropical fruit ingredients for global food industries">
+              <img
+                src="img/story/global-industries-temp.png"
+                alt="Mango pulp used in beverage, dairy, confectionery, bakery and salad applications"
+                class="farm-img-global"
+                data-replaceable-asset="global-industries"
+              >
               <span class="farm-stage-badge">07 &middot; Global industries</span>
             </div>
             <div class="farm-stage-copy">
@@ -506,40 +537,6 @@
             <p>Dispatch in 215kg aseptic drums or cans via JNPT Mumbai or Chennai Port.</p>
           </button>
         </div>
-      </div>
-    </section>
-
-    <section class="section logistics-section" id="logistics">
-      <div class="container">
-        <header class="section-head">
-          <div>
-            <p class="section-kicker">Container logistics</p>
-            <h2>Plan bulk volume and harvest windows</h2>
-            <p class="section-intro">Scan FCL payloads by packaging format, then align procurement with peak crop processing windows.</p>
-          </div>
-        </header>
-        <div class="logistics-grid">
-          <article class="log-card">
-            <p class="log-card-label">Aseptic drums</p>
-            <h3>20ft FCL &mdash; Aseptic loading</h3>
-            <div class="log-stat">17.2 MT</div>
-            <p>80 steel drums &middot; 215kg net each = 17.2 metric tons net.</p>
-          </article>
-          <article class="log-card">
-            <p class="log-card-label">OTS cans</p>
-            <h3>20ft FCL &mdash; OTS canned loading</h3>
-            <div class="log-stat">18.6 MT</div>
-            <p>1,000 cartons (6 cans &times; 3.1kg each) = 18.6 metric tons net.</p>
-          </article>
-        </div>
-        <article class="harvest-teaser">
-          <div>
-            <p class="badge">Harvest Cycles &amp; Contract Planning</p>
-            <h3>Plan Bulk Procurement Around Peak Crop Seasons</h3>
-            <p>Track fresh-crop processing windows for Alphonso, Kesar, Totapuri, Guava, and Papaya, or check year-round aseptic drum stock availability.</p>
-          </div>
-          <a class="btn-primary" href="supply-chain.html#calendar">View 12-Month Crop Calendar &rarr;</a>
-        </article>
       </div>
     </section>
 
