@@ -700,8 +700,82 @@
     updateEstimator();
   }
 
-  /* Home process steps keyboard/hover */
-  document.querySelectorAll("#home-flow .flow-step, #flow-steps .flow-step").forEach(function (step, _, list) {
+  /* Plant-to-Port interactive horizontal timeline */
+  (function initPlantPortTimeline() {
+    var root = document.getElementById("home-flow");
+    if (!root) return;
+
+    var nodes = Array.prototype.slice.call(root.querySelectorAll(".plant-port-node"));
+    var panels = Array.prototype.slice.call(root.querySelectorAll(".plant-port-panel"));
+    var fill = root.querySelector(".plant-port-track-fill");
+    if (!nodes.length || !fill) return;
+
+    var last = nodes.length - 1;
+
+    function setActive(index, opts) {
+      index = Math.max(0, Math.min(last, index));
+      root.setAttribute("data-active", String(index));
+
+      nodes.forEach(function (node, i) {
+        var reached = i <= index;
+        var active = i === index;
+        node.classList.toggle("is-reached", reached);
+        node.classList.toggle("is-active", active);
+        node.setAttribute("aria-selected", active ? "true" : "false");
+      });
+
+      panels.forEach(function (panel, i) {
+        var active = i === index;
+        panel.classList.toggle("is-active", active);
+        if (active) {
+          panel.removeAttribute("hidden");
+        } else {
+          panel.setAttribute("hidden", "");
+        }
+      });
+
+      /* Progress from center of 01 to center of selected step */
+      fill.style.width = last === 0 ? "0%" : ((index / last) * 100) + "%";
+
+      if (opts && opts.scroll) {
+        var activeNode = nodes[index];
+        if (activeNode && typeof activeNode.scrollIntoView === "function") {
+          activeNode.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+        }
+      }
+    }
+
+    nodes.forEach(function (node) {
+      node.addEventListener("click", function () {
+        setActive(parseInt(node.getAttribute("data-step"), 10) || 0, { scroll: true });
+      });
+      node.addEventListener("keydown", function (event) {
+        var current = parseInt(root.getAttribute("data-active"), 10) || 0;
+        if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+          event.preventDefault();
+          setActive(current + 1, { scroll: true });
+          nodes[Math.min(last, current + 1)].focus();
+        } else if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+          event.preventDefault();
+          setActive(current - 1, { scroll: true });
+          nodes[Math.max(0, current - 1)].focus();
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          setActive(0, { scroll: true });
+          nodes[0].focus();
+        } else if (event.key === "End") {
+          event.preventDefault();
+          setActive(last, { scroll: true });
+          nodes[last].focus();
+        }
+      });
+    });
+
+    setActive(0);
+  })();
+
+  /* Legacy flow-steps on other pages (if present) */
+  document.querySelectorAll("#flow-steps .flow-step").forEach(function (step, _, list) {
     function activate() {
       list.forEach(function (s) { s.classList.remove("is-active"); });
       step.classList.add("is-active");
@@ -813,14 +887,47 @@
     });
   }
 
-  /* Hero slideshow */
+  /* Hero: Processing Units interaction (image motion is CSS-only) */
+  (function initHeroExperience() {
+    var hero = document.querySelector("[data-hero]");
+    if (!hero) return;
+
+    var units = hero.querySelectorAll("[data-unit]");
+    var detail = hero.querySelector("[data-unit-detail]");
+
+    function activateUnit(btn) {
+      if (!btn) return;
+      for (var i = 0; i < units.length; i++) {
+        var on = units[i] === btn;
+        if (on) units[i].classList.add("is-active");
+        else units[i].classList.remove("is-active");
+        units[i].setAttribute("aria-selected", on ? "true" : "false");
+      }
+      if (detail) {
+        detail.textContent = btn.getAttribute("data-unit-note") || "";
+      }
+    }
+
+    for (var u = 0; u < units.length; u++) {
+      (function (btn) {
+        btn.addEventListener("mouseenter", function () { activateUnit(btn); });
+        btn.addEventListener("focus", function () { activateUnit(btn); });
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          activateUnit(btn);
+        });
+      })(units[u]);
+    }
+  })();
+
+  /* Legacy hero slideshow (kept inert if no slides present) */
   (function initHeroSlideshow() {
     var hero = document.querySelector(".hero");
     var root = document.querySelector(".hero-media");
     var story = document.querySelector(".hero-story");
     if (!root) return;
-    var slides = root.querySelectorAll(".hero-slide");
     var dots = document.querySelectorAll("[data-hero-dot]");
+    var slides = root.querySelectorAll(".hero-slide[data-hero-chapter], .hero-slide.hero-slide--legacy");
     if (!slides.length) return;
     var index = 0;
     var timer = null;

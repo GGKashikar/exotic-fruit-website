@@ -27,7 +27,7 @@
       <div class="utility-right">
         <span>HSN Code: 200799910</span>
         <span>SGF Germany (IRMA) Member</span>
-</div>
+      </div>
     </div>
   </div>
 
@@ -117,64 +117,75 @@
   </header>
 
   <main id="main">
-    <section class="hero" id="top">
-      <div class="hero-media">
-        <div class="hero-slides">
-          <figure class="hero-slide is-active" data-hero-chapter="01" data-hero-kicker="" data-hero-title="Nashik" data-hero-note="">
-            <img src="img/EFKGR-1.jpg" alt="Exotic Fruits industrial processing campus">
-          </figure>
-          <figure class="hero-slide" data-hero-chapter="02" data-hero-kicker="" data-hero-title="Krishnagiri" data-hero-note="">
-            <img src="img/EFKGR-2.jpg" alt="Krishnagiri processing facility exterior">
-          </figure>
-          <figure class="hero-slide" data-hero-chapter="03" data-hero-kicker="" data-hero-title="Ratnagiri" data-hero-note="">
-            <img src="img/parallax/EFRTN-1.jpg" alt="Ratnagiri fruit processing plant aerial view">
-          </figure>
-          <figure class="hero-slide" data-hero-chapter="04" data-hero-kicker="" data-hero-title="Fresh mango" data-hero-note="">
-            <img src="img/story/mango-harvest.png" alt="Fresh mangoes prepared for industrial processing">
-          </figure>
-          <figure class="hero-slide" data-hero-chapter="05" data-hero-kicker="" data-hero-title="Tropical fruit" data-hero-note="">
-            <img src="img/story/mango-pair.png" alt="Ripe tropical mangoes with leaves">
-          </figure>
-          <figure class="hero-slide" data-hero-chapter="06" data-hero-kicker="" data-hero-title="Fruit prep" data-hero-note="">
-            <img src="img/story/fruit-platter.png" alt="Prepared tropical fruit for industrial ingredients">
-          </figure>
-        </div>
-        <div class="hero-fruit-accent" aria-hidden="true">
-          <img src="img/story/mango-pair.png" alt="">
-        </div>
+    <section class="hero hero--orchard" id="top" data-hero>
+      <div class="hero-media" data-hero-media>
+        <figure class="hero-photo">
+          <img
+            src="img/story/mango-orchard-hero.png"
+            alt="Sunlit mango orchard with ripe fruit hanging on the trees"
+            class="hero-img"
+            width="1920"
+            height="1080"
+            decoding="async"
+          >
+        </figure>
       </div>
+
+      <aside class="hero-brand-plaque" aria-label="Exotic Fruits brand identity">
+        <img class="hero-brand-plaque-logo" src="img/logo.png" alt="" width="40" height="40">
+        <p class="hero-brand-plaque-name">Exotic<br>Fruits</p>
+        <span class="hero-brand-plaque-rule" aria-hidden="true"></span>
+        <p class="hero-brand-plaque-tag">From Farm<br>to Factory</p>
+        <span class="hero-brand-plaque-rule hero-brand-plaque-rule--soft" aria-hidden="true"></span>
+        <p class="hero-brand-plaque-meta">
+          <span>India</span>
+          <span>1999</span>
+        </p>
+      </aside>
 
       <div class="hero-shell">
         <div class="hero-main">
+          <aside class="hero-units" aria-label="Processing units">
+            <p class="hero-units-kicker">Processing units</p>
+            <ul class="hero-units-list" role="listbox" aria-label="Select a processing unit">
+              <li>
+                <button type="button" class="hero-unit is-active" role="option" aria-selected="true" data-unit="nashik" data-unit-note="Tomato &amp; pomegranate belt">
+                  <span class="hero-unit-dot" aria-hidden="true"></span>
+                  <span class="hero-unit-name">Nashik</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="hero-unit" role="option" aria-selected="false" data-unit="ratnagiri" data-unit-note="Alphonso mango &amp; guava">
+                  <span class="hero-unit-dot" aria-hidden="true"></span>
+                  <span class="hero-unit-name">Ratnagiri</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="hero-unit" role="option" aria-selected="false" data-unit="krishnagiri" data-unit-note="Totapuri mango belt">
+                  <span class="hero-unit-dot" aria-hidden="true"></span>
+                  <span class="hero-unit-name">Krishnagiri</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="hero-unit" role="option" aria-selected="false" data-unit="chittoor" data-unit-note="Tropical fruit processing">
+                  <span class="hero-unit-dot" aria-hidden="true"></span>
+                  <span class="hero-unit-name">Chittoor</span>
+                </button>
+              </li>
+            </ul>
+            <p class="hero-units-note" data-unit-detail aria-live="polite">Tomato &amp; pomegranate belt</p>
+            <p class="hero-units-stage">Processing close to India&rsquo;s fruit-growing regions</p>
+          </aside>
+
           <div class="hero-copy">
             <p class="badge">Bulk pulp &amp; puree</p>
-            <h1>Tropical fruit ingredients for factories</h1>
-            <p class="lede">Aseptic, canned, and frozen pulp from Indian fruit belts, packed for industrial lines.</p>
+            <h1>Tropical fruit ingredients<br>for global food<br>manufacturers</h1>
+            <p class="lede">Aseptic, canned and frozen pulp, puree and concentrates from India&rsquo;s fruit-growing regions, processed for industrial food applications.</p>
             <div class="hero-actions">
-              <a class="btn-primary" href="products.html#catalog">View catalogue</a>
-              <button class="btn-ghost" type="button" data-open-drawer>Request sample</button>
+              <a class="btn-primary" href="products.html#catalog">View Products &rarr;</a>
+              <button class="btn-ghost" type="button" data-open-drawer>Request Bulk Sample &rarr;</button>
             </div>
           </div>
-
-          <aside class="hero-story" aria-label="Slide controls">
-            <div class="hero-story-top">
-              <span class="hero-story-chapter" data-hero-chapter-label>01</span>
-              <p class="hero-story-title" data-hero-title>Nashik</p>
-              <div class="hero-story-progress" aria-hidden="true"><i data-hero-progress></i></div>
-            </div>
-            <div class="hero-story-controls">
-              <button type="button" class="hero-nav-btn" data-hero-prev aria-label="Previous slide">&lsaquo;</button>
-              <div class="hero-dots" role="tablist" aria-label="Hero slides">
-                <button type="button" role="tab" class="is-active" data-hero-dot="0" aria-label="Nashik plant" aria-selected="true"></button>
-                <button type="button" role="tab" data-hero-dot="1" aria-label="Krishnagiri plant" aria-selected="false"></button>
-                <button type="button" role="tab" data-hero-dot="2" aria-label="Ratnagiri plant" aria-selected="false"></button>
-                <button type="button" role="tab" data-hero-dot="3" aria-label="Fresh mango harvest" aria-selected="false"></button>
-                <button type="button" role="tab" data-hero-dot="4" aria-label="Tropical mangoes" aria-selected="false"></button>
-                <button type="button" role="tab" data-hero-dot="5" aria-label="Prepared tropical fruit" aria-selected="false"></button>
-              </div>
-              <button type="button" class="hero-nav-btn" data-hero-next aria-label="Next slide">&rsaquo;</button>
-            </div>
-          </aside>
         </div>
 
         <ol class="hero-flow" aria-label="How Exotic Fruits works">
@@ -407,8 +418,8 @@
           <li class="farm-stage farm-stage--pulp" data-farm-stage>
             <div class="farm-stage-media">
               <img
-                src="img/story/mango-pulp.png"
-                alt="Mango pulp and puree as standardized industrial ingredients"
+                src="img/story/papaya-puree.png"
+                alt="Papaya puree in a glass jar with fresh papaya as a standardized industrial ingredient"
                 class="farm-img-pulp"
               >
               <span class="farm-stage-badge">05 &middot; Pulp &amp; concentrate</span>
@@ -492,50 +503,124 @@
           <span>Screening</span>
           <span>Processing</span>
           <span>QA release</span>
+          <span>Packing</span>
           <span>Export</span>
         </div>
 
-        <div class="plant-port-flow" id="home-flow">
-          <button class="plant-port-step flow-step is-active" type="button">
-            <span class="plant-port-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><circle cx="16" cy="18" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M16 6v4M11 9c2 1.5 3 2 5 2s3-.5 5-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </span>
-            <span class="pipe-num">01</span>
-            <h3>Raw fruit intake</h3>
-            <p>Fruit received from Ratnagiri, Krishnagiri, Nashik, and Chittoor belts for industrial processing.</p>
-          </button>
-          <button class="plant-port-step flow-step" type="button">
-            <span class="plant-port-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><rect x="7" y="6" width="18" height="20" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M11 12h10M11 16h10M11 20h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </span>
-            <span class="pipe-num">02</span>
-            <h3>MRL &amp; QC Screening</h3>
-            <p>Lab testing raw batches for pesticide residues per EU AIJN and US FDA standards.</p>
-          </button>
-          <button class="plant-port-step flow-step" type="button">
-            <span class="plant-port-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><path d="M6 22V10h6l2 4h8v8H6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="22" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/></svg>
-            </span>
-            <span class="pipe-num">03</span>
-            <h3>Aseptic Thermal Processing</h3>
-            <p>Stainless steel de-stoning, flash sterilization, and sterile bag filling.</p>
-          </button>
-          <button class="plant-port-step flow-step" type="button">
-            <span class="plant-port-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><path d="M8 24V12l8-4 8 4v12" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 16l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-            <span class="pipe-num">04</span>
-            <h3>In-House Lab QA</h3>
-            <p>Batch Certificate of Analysis (COA) for Brix, pH, colour, and micro-checks.</p>
-          </button>
-          <button class="plant-port-step flow-step" type="button">
-            <span class="plant-port-icon" aria-hidden="true">
-              <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><rect x="5" y="14" width="22" height="10" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M9 14V10h14v4M8 24v2M24 24v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
-            </span>
-            <span class="pipe-num">05</span>
-            <h3>Global Freight Loading</h3>
-            <p>Dispatch in 215kg aseptic drums or cans via JNPT Mumbai or Chennai Port.</p>
-          </button>
+        <div class="plant-port-timeline" id="home-flow" data-active="0">
+          <div class="plant-port-track-row">
+            <div class="plant-port-track" aria-hidden="true">
+              <span class="plant-port-track-base"></span>
+              <span class="plant-port-track-fill"></span>
+            </div>
+            <ol class="plant-port-nodes" role="listbox" aria-label="Plant-to-Port processing steps">
+              <li>
+                <button type="button" class="plant-port-node is-active is-reached" role="option" aria-selected="true" data-step="0">
+                  <span class="plant-port-node-num">01</span>
+                  <span class="plant-port-dot" aria-hidden="true"></span>
+                  <span class="plant-port-node-label">Raw fruit intake</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="plant-port-node" role="option" aria-selected="false" data-step="1">
+                  <span class="plant-port-node-num">02</span>
+                  <span class="plant-port-dot" aria-hidden="true"></span>
+                  <span class="plant-port-node-label">MRL &amp; QC Screening</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="plant-port-node" role="option" aria-selected="false" data-step="2">
+                  <span class="plant-port-node-num">03</span>
+                  <span class="plant-port-dot" aria-hidden="true"></span>
+                  <span class="plant-port-node-label">Aseptic Thermal Processing</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="plant-port-node" role="option" aria-selected="false" data-step="3">
+                  <span class="plant-port-node-num">04</span>
+                  <span class="plant-port-dot" aria-hidden="true"></span>
+                  <span class="plant-port-node-label">In-House Lab QA</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="plant-port-node" role="option" aria-selected="false" data-step="4">
+                  <span class="plant-port-node-num">05</span>
+                  <span class="plant-port-dot" aria-hidden="true"></span>
+                  <span class="plant-port-node-label">Packing</span>
+                </button>
+              </li>
+              <li>
+                <button type="button" class="plant-port-node" role="option" aria-selected="false" data-step="5">
+                  <span class="plant-port-node-num">06</span>
+                  <span class="plant-port-dot" aria-hidden="true"></span>
+                  <span class="plant-port-node-label">FCL Export Logistics</span>
+                </button>
+              </li>
+            </ol>
+          </div>
+
+          <div class="plant-port-detail" aria-live="polite">
+            <article class="plant-port-panel is-active" data-panel="0">
+              <span class="plant-port-panel-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><circle cx="16" cy="18" r="8" stroke="currentColor" stroke-width="1.8"/><path d="M16 6v4M11 9c2 1.5 3 2 5 2s3-.5 5-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <div class="plant-port-panel-copy">
+                <p class="plant-port-panel-kicker">01 &middot; Raw fruit intake</p>
+                <h3>Raw fruit intake</h3>
+                <p>Fruit received from Ratnagiri, Krishnagiri, Nashik, and Chittoor belts for industrial processing.</p>
+              </div>
+            </article>
+            <article class="plant-port-panel" data-panel="1" hidden>
+              <span class="plant-port-panel-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><rect x="7" y="6" width="18" height="20" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M11 12h10M11 16h10M11 20h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <div class="plant-port-panel-copy">
+                <p class="plant-port-panel-kicker">02 &middot; MRL &amp; QC Screening</p>
+                <h3>MRL &amp; QC Screening</h3>
+                <p>Lab testing raw batches for pesticide residues per EU AIJN and US FDA standards.</p>
+              </div>
+            </article>
+            <article class="plant-port-panel" data-panel="2" hidden>
+              <span class="plant-port-panel-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><path d="M6 22V10h6l2 4h8v8H6z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="22" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/></svg>
+              </span>
+              <div class="plant-port-panel-copy">
+                <p class="plant-port-panel-kicker">03 &middot; Aseptic Thermal Processing</p>
+                <h3>Aseptic Thermal Processing</h3>
+                <p>Stainless steel de-stoning, flash sterilization, and sterile bag filling.</p>
+              </div>
+            </article>
+            <article class="plant-port-panel" data-panel="3" hidden>
+              <span class="plant-port-panel-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><path d="M8 24V12l8-4 8 4v12" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M12 16l3 3 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <div class="plant-port-panel-copy">
+                <p class="plant-port-panel-kicker">04 &middot; In-House Lab QA</p>
+                <h3>In-House Lab QA</h3>
+                <p>Batch Certificate of Analysis (COA) for Brix, pH, colour, and micro-checks.</p>
+              </div>
+            </article>
+            <article class="plant-port-panel" data-panel="4" hidden>
+              <span class="plant-port-panel-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><rect x="5" y="14" width="22" height="10" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M9 14V10h14v4M8 24v2M24 24v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <div class="plant-port-panel-copy">
+                <p class="plant-port-panel-kicker">05 &middot; Packing</p>
+                <h3>Packing</h3>
+                <p>Packed in 215kg aseptic drums or cans for industrial manufacturing lines.</p>
+              </div>
+            </article>
+            <article class="plant-port-panel" data-panel="5" hidden>
+              <span class="plant-port-panel-icon" aria-hidden="true">
+                <svg viewBox="0 0 32 32" width="28" height="28" fill="none"><path d="M4 20h24M7 20V12l5-3h8l5 3v8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 24h4M18 24h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+              </span>
+              <div class="plant-port-panel-copy">
+                <p class="plant-port-panel-kicker">06 &middot; FCL Export Logistics</p>
+                <h3>FCL Export Logistics</h3>
+                <p>Bulk export dispatch via JNPT Mumbai or Chennai Port.</p>
+              </div>
+            </article>
+          </div>
         </div>
       </div>
     </section>
