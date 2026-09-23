@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/site.css?v=131c889e08">
+  <link rel="stylesheet" href="css/site.css?v=hero-cta-swap22">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
@@ -37,12 +37,7 @@
       <a class="brand" href="index.html">
         <img src="img/logo.png" alt="Exotic Fruits Pvt. Ltd.">
         <span class="brand-name">Exotic Fruits<small>Pulp &amp; Purees B2B Global</small></span>
-      </a>
-      <a class="home-link" href="index.html" aria-label="Home" title="Home">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M4 10.5 12 4l8 6.5V20a1 1 0 0 1-1 1h-5.5v-6.5h-3V21H5a1 1 0 0 1-1-1v-9.5z"/></svg>
-        <span></span>
-      </a>
-      </div>
+      </a></div>
       <button class="nav-toggle" type="button" aria-label="Open menu" aria-expanded="false"><span></span><span></span><span></span></button>
       <nav class="site-nav" aria-label="Primary">
         <ul class="nav-list">
@@ -110,7 +105,7 @@
         </ul>
         <div class="header-actions">
           <a class="btn-secondary" href="quality.html#downloads">TDS Library</a>
-          <button class="btn-primary" type="button" data-open-drawer>Request Bulk Sample / RFQ</button>
+          <button class="btn-primary" type="button" data-open-drawer>Request a Product Sample</button>
         </div>
       </nav>
     </div>
@@ -145,45 +140,28 @@
 
       <div class="hero-shell">
         <div class="hero-main">
-          <aside class="hero-units" aria-label="Processing units">
-            <p class="hero-units-kicker">Processing units</p>
-            <ul class="hero-units-list" role="listbox" aria-label="Select a processing unit">
-              <li>
-                <button type="button" class="hero-unit is-active" role="option" aria-selected="true" data-unit="nashik" data-unit-note="Tomato &amp; pomegranate belt">
-                  <span class="hero-unit-dot" aria-hidden="true"></span>
-                  <span class="hero-unit-name">Nashik</span>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="hero-unit" role="option" aria-selected="false" data-unit="ratnagiri" data-unit-note="Alphonso mango &amp; guava">
-                  <span class="hero-unit-dot" aria-hidden="true"></span>
-                  <span class="hero-unit-name">Ratnagiri</span>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="hero-unit" role="option" aria-selected="false" data-unit="krishnagiri" data-unit-note="Totapuri mango belt">
-                  <span class="hero-unit-dot" aria-hidden="true"></span>
-                  <span class="hero-unit-name">Krishnagiri</span>
-                </button>
-              </li>
-              <li>
-                <button type="button" class="hero-unit" role="option" aria-selected="false" data-unit="chittoor" data-unit-note="Tropical fruit processing">
-                  <span class="hero-unit-dot" aria-hidden="true"></span>
-                  <span class="hero-unit-name">Chittoor</span>
-                </button>
-              </li>
+          <aside class="hero-plants" data-hero-plants aria-label="Processing plants">
+            <p class="hero-plants-label">Processing Plants</p>
+            <ul class="hero-plants-list">
+              <li tabindex="0" data-unit="nashik"><strong>Nashik</strong></li>
+              <li tabindex="0" data-unit="ratnagiri"><strong>Ratnagiri</strong></li>
+              <li tabindex="0" data-unit="krishnagiri"><strong>Krishnagiri</strong></li>
+              <li tabindex="0" data-unit="chittoor"><strong>Chittoor</strong></li>
             </ul>
-            <p class="hero-units-note" data-unit-detail aria-live="polite">Tomato &amp; pomegranate belt</p>
-            <p class="hero-units-stage">Processing close to India&rsquo;s fruit-growing regions</p>
+            <div class="hero-plants-foot" aria-live="polite">
+              <p class="hero-plants-foot-line" data-unit-detail="nashik">Tomato &amp; Pomegranate Belt</p>
+              <p class="hero-plants-foot-line" data-unit-detail="ratnagiri">Alphonso Mango &amp; Guava Belt</p>
+              <p class="hero-plants-foot-line" data-unit-detail="krishnagiri">Totapuri Mango Belt</p>
+              <p class="hero-plants-foot-line" data-unit-detail="chittoor">Tropical Fruit Processing</p>
+            </div>
           </aside>
 
           <div class="hero-copy">
-            <p class="badge">Bulk pulp &amp; puree</p>
             <h1>Tropical fruit ingredients<br>for global food<br>manufacturers</h1>
             <p class="lede">Aseptic, canned and frozen pulp, puree and concentrates from India&rsquo;s fruit-growing regions, processed for industrial food applications.</p>
             <div class="hero-actions">
               <a class="btn-primary" href="products.html#catalog">View Products &rarr;</a>
-              <button class="btn-ghost" type="button" data-open-drawer>Request Bulk Sample &rarr;</button>
+              <button class="btn-ghost" type="button" data-open-drawer>Request a Product Sample</button>
             </div>
           </div>
         </div>
@@ -199,8 +177,8 @@
         <ul class="trust-metrics">
           <li><strong>4 plants</strong> India</li>
           <li><strong>Aseptic &middot; canned &middot; frozen</strong> Bulk pack</li>
-          <li><strong>FSSC &middot; SGF</strong> Certified lots</li>
-          <li><strong>FCL export</strong> JNPT &amp; Chennai</li>
+          <li><strong>FSSC 22000</strong> Food Safety Certified</li>
+          <li><strong>SGF Germany (IRMA)</strong> Quality Assurance</li>
         </ul>
       </div>
     </section>
@@ -250,11 +228,11 @@
               <span class="app-card-mark">02</span>
             </div>
             <h3>Dairy &amp; Frozen Dessert Processing</h3>
-            <p>pH-stabilized fruit purees formulated as fruit-prep ingredients for cultured yogurt, ice cream ripple bases, and sorbets.</p>
+            <p>pH-stabilized fruit purees formulated as fruit-prep ingredients for cultured yogurt, ice cream ripple bases, and sharbat.</p>
             <div class="tag-row">
               <span class="tag">Fruit Preparations</span>
               <span class="tag">Yogurt Formulations</span>
-              <span class="tag">Sorbet &amp; Ice Cream</span>
+              <span class="tag">Sharbat &amp; Ice Cream</span>
             </div>
           </article>
           <article class="app-card">
@@ -299,14 +277,15 @@
     </section>
 
     <div class="story-bridge" aria-hidden="true">
-      <div class="container story-bridge-inner">
-        <span>Orchard</span><i></i>
-        <span>Fresh fruit</span><i></i>
-        <span>Processing</span><i></i>
-        <span>Quality</span><i></i>
-        <span>Bulk ingredient</span><i></i>
-        <span>Port</span><i></i>
-        <span>Global industry</span>
+      <div class="container story-bridge-track">
+        <div class="story-bridge-inner">
+          <span>Orchard</span>
+          <span>Fresh fruit</span>
+          <span>Processing</span>
+          <span>Quality check</span>
+          <span>Port</span>
+          <span>Global industry</span>
+        </div>
       </div>
     </div>
 
@@ -677,8 +656,10 @@
                   <span class="footprint-flip-badge">Corporate Office (HQ)</span>
                   <div class="footprint-flip-caption">
                     <h3>Mumbai</h3>
-                    <p class="footprint-flip-region">Maharashtra</p>
-                    <p class="footprint-flip-belt">Global Export HQ / JNPT Connection</p>
+                    <div class="footprint-flip-detail">
+                      <p class="footprint-flip-region">Maharashtra</p>
+                      <p class="footprint-flip-belt">Global Export HQ / JNPT Connection</p>
+                    </div>
                   </div>
                   <span class="footprint-flip-go" aria-hidden="true">&rarr;</span>
                 </div>
@@ -694,14 +675,40 @@
                 </div>
               </div>
             </article>
+            <article class="footprint-flip-card" role="listitem" tabindex="0" data-location="nashik" aria-pressed="false">
+              <div class="footprint-flip-inner">
+                <div class="footprint-flip-front">
+                  <img src="img/EFKGR-1.jpg" alt="Nashik processing unit">
+                  <div class="footprint-flip-caption">
+                    <h3>Nashik</h3>
+                    <div class="footprint-flip-detail">
+                      <p class="footprint-flip-region">Maharashtra</p>
+                      <p class="footprint-flip-belt">Tomato &amp; Pomegranate Belt | JNPT Port</p>
+                    </div>
+                  </div>
+                  <span class="footprint-flip-go" aria-hidden="true">&rarr;</span>
+                </div>
+                <div class="footprint-flip-back">
+                  <div class="footprint-flip-back-scroll">
+                    <p class="footprint-flip-kicker">Nashik Processing Unit</p>
+                    <h3>Nashik</h3>
+                    <p class="footprint-flip-address">Plot No CU-81, Additional Vinchur Industrial Area, Niphad, Vinchur, Nashik, Maharashtra – 422305, India</p>
+                    <p class="footprint-flip-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
+                    <span class="footprint-flip-tag">Tomato &amp; Pomegranate Belt | JNPT Port</span>
+                  </div>
+                </div>
+              </div>
+            </article>
             <article class="footprint-flip-card" role="listitem" tabindex="0" data-location="ratnagiri" aria-pressed="false">
               <div class="footprint-flip-inner">
                 <div class="footprint-flip-front">
                   <img src="img/parallax/EFRTN-1.jpg" alt="Ratnagiri processing unit">
                   <div class="footprint-flip-caption">
                     <h3>Ratnagiri</h3>
-                    <p class="footprint-flip-region">Maharashtra &middot; HACCP</p>
-                    <p class="footprint-flip-belt">Alphonso Mango &amp; Guava Belt | JNPT Port</p>
+                    <div class="footprint-flip-detail">
+                      <p class="footprint-flip-region">Maharashtra &middot; HACCP</p>
+                      <p class="footprint-flip-belt">Alphonso Mango &amp; Guava Belt | JNPT Port</p>
+                    </div>
                   </div>
                   <span class="footprint-flip-go" aria-hidden="true">&rarr;</span>
                 </div>
@@ -717,36 +724,16 @@
                 </div>
               </div>
             </article>
-            <article class="footprint-flip-card" role="listitem" tabindex="0" data-location="nashik" aria-pressed="false">
-              <div class="footprint-flip-inner">
-                <div class="footprint-flip-front">
-                  <img src="img/EFKGR-1.jpg" alt="Nashik processing unit">
-                  <div class="footprint-flip-caption">
-                    <h3>Nashik</h3>
-                    <p class="footprint-flip-region">Maharashtra</p>
-                    <p class="footprint-flip-belt">Tomato &amp; Pomegranate Belt | JNPT Port</p>
-                  </div>
-                  <span class="footprint-flip-go" aria-hidden="true">&rarr;</span>
-                </div>
-                <div class="footprint-flip-back">
-                  <div class="footprint-flip-back-scroll">
-                    <p class="footprint-flip-kicker">Nashik Processing Unit</p>
-                    <h3>Nashik</h3>
-                    <p class="footprint-flip-address">Plot No CU-81, Additional Vinchur Industrial Area, Niphad, Vinchur, Nashik, Maharashtra – 422305, India</p>
-                    <p class="footprint-flip-meta"><a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a></p>
-                    <span class="footprint-flip-tag">Tomato &amp; Pomegranate Belt | JNPT Port</span>
-                  </div>
-                </div>
-              </div>
-            </article>
             <article class="footprint-flip-card" role="listitem" tabindex="0" data-location="krishnagiri" aria-pressed="false">
               <div class="footprint-flip-inner">
                 <div class="footprint-flip-front">
                   <img src="img/EFKGR-2.jpg" alt="Krishnagiri processing unit">
                   <div class="footprint-flip-caption">
                     <h3>Krishnagiri</h3>
-                    <p class="footprint-flip-region">Tamil Nadu &middot; HACCP</p>
-                    <p class="footprint-flip-belt">Totapuri Mango Belt | Chennai Port</p>
+                    <div class="footprint-flip-detail">
+                      <p class="footprint-flip-region">Tamil Nadu &middot; HACCP</p>
+                      <p class="footprint-flip-belt">Totapuri Mango Belt | Chennai Port</p>
+                    </div>
                   </div>
                   <span class="footprint-flip-go" aria-hidden="true">&rarr;</span>
                 </div>
@@ -767,8 +754,10 @@
                   <img src="img/parallax/EFRTN-1.jpg" alt="Chittoor processing unit">
                   <div class="footprint-flip-caption">
                     <h3>Chittoor</h3>
-                    <p class="footprint-flip-region">Andhra Pradesh</p>
-                    <p class="footprint-flip-belt">Tropical Fruit Processing | Chennai Port</p>
+                    <div class="footprint-flip-detail">
+                      <p class="footprint-flip-region">Andhra Pradesh</p>
+                      <p class="footprint-flip-belt">Tropical Fruit Processing | Chennai Port</p>
+                    </div>
                   </div>
                   <span class="footprint-flip-go" aria-hidden="true">&rarr;</span>
                 </div>
@@ -791,8 +780,8 @@
             <div class="footprint-map-wrap">
               <div id="map" role="region" aria-label="Operational locations across India"></div>
               <div class="footprint-map-legend" aria-hidden="true">
-                <span><i class="legend-star"></i> Corporate HQ</span>
-                <span><i class="legend-pin"></i> Processing unit</span>
+                <span><i class="legend-star"></i> Mumbai — Corporate HQ</span>
+                <span><i class="legend-pin"></i> Processing Plants</span>
               </div>
             </div>
           </div>
@@ -832,12 +821,12 @@
 
     <section class="calm-cta" id="enquire">
       <div class="container">
-        <p class="cta-journey" aria-hidden="true">Fruit <span>&rarr;</span> Processing <span>&rarr;</span> Quality <span>&rarr;</span> Export <span>&rarr;</span> Sample / RFQ</p>
-        <h2>Request a bulk technical sample</h2>
-        <p>Specify fruit variant, bulk packaging, destination port, and estimated volume. Our commercial team will respond from <a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a>.</p>
+        <p class="cta-journey" aria-hidden="true">Fruit <span>&rarr;</span> Processing <span>&rarr;</span> Quality <span>&rarr;</span> Products <span>&rarr;</span> Enquire</p>
+        <h2>Request a Product Sample</h2>
+        <p>Tell us your fruit variant, packaging format, destination port, and estimated volume. Our commercial team will help you with the right product and next steps via <a href="mailto:info@exotic-fruit.com">info@exotic-fruit.com</a>.</p>
         <div class="hero-actions">
-          <button class="btn-primary" type="button" data-open-drawer>Request Bulk Sample</button>
-          <a class="btn-ghost" href="contact.html">Contact industrial sales</a>
+          <button class="btn-primary" type="button" data-open-drawer>Request a Product Sample</button>
+          <a class="btn-ghost" href="contact.html">Contact Industrial Sales</a>
         </div>
       </div>
     </section>
@@ -883,7 +872,7 @@
   <aside class="drawer" id="rfq-drawer" aria-label="Sample request" role="dialog" aria-modal="true">
     <div class="drawer-head">
       <div>
-        <h2>Request Bulk Sample</h2>
+        <h2>Request a Product Sample</h2>
         <p>Freight RFQ &middot; opens email to info@exotic-fruit.com</p>
       </div>
       <button class="drawer-close" type="button" data-close-drawer aria-label="Close">&times;</button>
@@ -994,7 +983,7 @@
     </div>
   </div>
 
-  <script src="js/site.js?v=fed56e3033"></script>
+  <script src="js/site.js?v=responsive-plants21"></script>
 </body>
 </html>
 

@@ -887,36 +887,59 @@
     });
   }
 
-  /* Hero: Processing Units interaction (image motion is CSS-only) */
+  /* Hero: Processing Plants — hover + tap reveal details */
   (function initHeroExperience() {
-    var hero = document.querySelector("[data-hero]");
-    if (!hero) return;
+    var root = document.querySelector("[data-hero-plants]");
+    if (!root) return;
 
-    var units = hero.querySelectorAll("[data-unit]");
-    var detail = hero.querySelector("[data-unit-detail]");
+    var items = root.querySelectorAll("[data-unit]");
+    if (!items.length) return;
 
-    function activateUnit(btn) {
-      if (!btn) return;
-      for (var i = 0; i < units.length; i++) {
-        var on = units[i] === btn;
-        if (on) units[i].classList.add("is-active");
-        else units[i].classList.remove("is-active");
-        units[i].setAttribute("aria-selected", on ? "true" : "false");
-      }
-      if (detail) {
-        detail.textContent = btn.getAttribute("data-unit-note") || "";
+    var fineHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    function clearActive() {
+      for (var i = 0; i < items.length; i++) {
+        items[i].classList.remove("is-active");
+        items[i].setAttribute("aria-pressed", "false");
       }
     }
 
-    for (var u = 0; u < units.length; u++) {
-      (function (btn) {
-        btn.addEventListener("mouseenter", function () { activateUnit(btn); });
-        btn.addEventListener("focus", function () { activateUnit(btn); });
-        btn.addEventListener("click", function (e) {
+    for (var p = 0; p < items.length; p++) {
+      (function (item) {
+        item.setAttribute("role", "button");
+        item.setAttribute("tabindex", "0");
+        item.setAttribute("aria-pressed", "false");
+
+        function activate(toggle) {
+          var wasOn = item.classList.contains("is-active");
+          clearActive();
+          if (toggle && wasOn) return;
+          item.classList.add("is-active");
+          item.setAttribute("aria-pressed", "true");
+        }
+
+        item.addEventListener("click", function (e) {
           e.preventDefault();
-          activateUnit(btn);
+          activate(!fineHover);
         });
-      })(units[u]);
+
+        item.addEventListener("keydown", function (e) {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            activate(true);
+          }
+        });
+
+        if (fineHover) {
+          item.addEventListener("mouseenter", function () {
+            activate(false);
+          });
+        }
+      })(items[p]);
+    }
+
+    if (fineHover) {
+      root.addEventListener("mouseleave", clearActive);
     }
   })();
 
@@ -1253,7 +1276,7 @@
       activeId = "";
       closeAllTooltips();
       cards.forEach(function (card) {
-        card.classList.remove("is-active", "is-flipped");
+        card.classList.remove("is-active", "is-flipped", "is-expanded");
         card.setAttribute("aria-pressed", "false");
       });
       Object.keys(markers).forEach(function (key) {
@@ -1341,26 +1364,54 @@
 
     map.on("click", clearActive);
 
+    var fineHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
     cards.forEach(function (card) {
       card.setAttribute("aria-pressed", "false");
       var locId = card.getAttribute("data-location");
 
       card.addEventListener("mouseenter", function () {
         if (markers[locId]) showHoverTooltip(locId);
+        if (fineHover && locId !== "hq") {
+          cards.forEach(function (c) {
+            if (c !== card) c.classList.remove("is-expanded");
+          });
+          card.classList.add("is-expanded");
+        }
       });
 
       card.addEventListener("mouseleave", function () {
         if (markers[locId]) markers[locId].closeTooltip();
+        if (fineHover && activeId !== locId) {
+          card.classList.remove("is-expanded");
+        }
       });
 
       card.addEventListener("click", function (e) {
         if (e.target.closest("a")) return;
         var id = card.getAttribute("data-location");
+
+        /* Touch / coarse pointer: first tap expands plant details; second tap flips */
+        if (!fineHover && id !== "hq") {
+          if (!card.classList.contains("is-expanded") && activeId !== id) {
+            cards.forEach(function (c) {
+              c.classList.remove("is-expanded");
+            });
+            card.classList.add("is-expanded");
+            if (markers[id]) showHoverTooltip(id);
+            return;
+          }
+        }
+
         if (activeId === id) {
           clearActive();
+          card.classList.remove("is-expanded");
           fitAll();
           return;
         }
+        cards.forEach(function (c) {
+          c.classList.toggle("is-expanded", c === card);
+        });
         setActive(id, true);
       });
 
