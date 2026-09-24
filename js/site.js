@@ -97,26 +97,32 @@
     var format = (document.getElementById("fcl-format") || {}).value || "drums";
     var size = (document.getElementById("fcl-size") || {}).value || "20";
     var unitsEl = document.getElementById("fcl-units");
+    var unitLabelEl = document.getElementById("fcl-unit-label");
     var netEl = document.getElementById("fcl-net");
     var noteEl = document.getElementById("fcl-note");
     if (!unitsEl || !netEl) return;
     var units = 0;
     var net = 0;
     var note = "";
+    var unitLabel = "Drums";
     if (format === "drums") {
       units = size === "40" ? 160 : 80;
       net = units * 215;
       note = "215 kg net aseptic drums · " + units + " drums per " + size + "ft FCL";
+      unitLabel = "Drums";
     } else if (format === "cans") {
       units = size === "40" ? 2000 : 1000;
       net = units * 18.6;
       note = "OTS cartons (6 × 3.1 kg) · " + units + " cartons per " + size + "ft FCL";
+      unitLabel = "Cartons";
     } else {
       units = size === "40" ? 2200 : 1100;
       net = units * 16;
       note = "Frozen cartons (approx. 16 kg) · indicative " + size + "ft FCL load";
+      unitLabel = "Buckets";
     }
     unitsEl.textContent = String(units);
+    if (unitLabelEl) unitLabelEl.textContent = unitLabel;
     netEl.textContent = (net / 1000).toFixed(1) + " MT";
     if (noteEl) noteEl.textContent = note;
   }
@@ -854,8 +860,7 @@
         product: product,
         packaging: document.getElementById("drawer-packaging").value,
         application: apps.join(", "),
-        quantity: document.getElementById("drawer-quantity").value.trim(),
-        message: document.getElementById("drawer-message").value.trim()
+        quantity: document.getElementById("drawer-quantity").value.trim()
       });
       if (drawerSuccess) drawerSuccess.classList.add("is-visible");
     });
@@ -1070,14 +1075,18 @@
     start();
   })();
 
-  /* Interactive processing-unit map (Leaflet) — cards + map as one component */
+  /* Processing-unit map — MapLibre GL + OpenFreeMap + India boundary GeoJSON */
   (function initFootprintMap() {
     var mapEl = document.getElementById("map");
-    if (!mapEl || typeof L === "undefined") return;
+    if (!mapEl || typeof maplibregl === "undefined") return;
 
     var cardSelector = document.querySelector(".footprint-flip-card")
       ? ".footprint-flip-card"
       : ".footprint-card";
+
+    var BOUNDARY_GEOJSON_URL = "assets/map/india-boundary.geojson";
+    var BASEMAP_STYLE_URL = "https://tiles.openfreemap.org/styles/liberty";
+    var BOUNDARY_LINE_COLOR = "#263f35";
 
     var locations = {
       hq: {
@@ -1147,108 +1156,150 @@
       }
     };
 
+    function lngLatOf(loc) {
+      return [loc.coords[1], loc.coords[0]];
+    }
+
     function hoverLabel(loc) {
       return loc.name;
     }
 
-    function pinIcon(loc) {
-      if (loc.kind === "hq") {
-        return L.divIcon({
-          className: "footprint-marker is-hq is-star",
-          html: '<span class="footprint-star" aria-hidden="true">★</span>',
-          iconSize: [28, 28],
-          iconAnchor: [14, 14]
-        });
-      }
-      return L.divIcon({
-        className: "footprint-marker",
-        html: '<span class="footprint-pin" aria-hidden="true"></span>',
-        iconSize: [28, 36],
-        iconAnchor: [14, 34]
-      });
+    function boundaryLineWidth() {
+      return window.matchMedia("(max-width: 720px)").matches ? 1.5 : 2;
     }
 
-    var map = L.map(mapEl, {
-      scrollWheelZoom: true,
-      zoomControl: true
+    function indiaFitPadding() {
+      var narrow = window.matchMedia("(max-width: 720px)").matches;
+      return narrow
+        ? { top: 36, bottom: 72, left: 28, right: 28 }
+        : { top: 45, bottom: 56, left: 45, right: 45 };
+    }
+
+    function boundsFromGeoJSON(geojson) {
+      var minLng = Infinity;
+      var minLat = Infinity;
+      var maxLng = -Infinity;
+      var maxLat = -Infinity;
+
+      function accum(coord) {
+        if (!coord || coord.length < 2) return;
+        var lng = coord[0];
+        var lat = coord[1];
+        if (typeof lng !== "number" || typeof lat !== "number") return;
+        if (lng < minLng) minLng = lng;
+        if (lat < minLat) minLat = lat;
+        if (lng > maxLng) maxLng = lng;
+        if (lat > maxLat) maxLat = lat;
+      }
+
+      function walk(node) {
+        if (!node) return;
+        if (typeof node[0] === "number") {
+          accum(node);
+          return;
+        }
+        for (var i = 0; i < node.length; i++) walk(node[i]);
+      }
+
+      var features =
+        geojson.type === "FeatureCollection"
+          ? geojson.features || []
+          : geojson.type === "Feature"
+            ? [geojson]
+            : [{ geometry: geojson }];
+
+      features.forEach(function (f) {
+        if (f && f.geometry && f.geometry.coordinates) {
+          walk(f.geometry.coordinates);
+        }
+      });
+
+      if (!isFinite(minLng) || !isFinite(minLat) || !isFinite(maxLng) || !isFinite(maxLat)) {
+        return null;
+      }
+      return [
+        [minLng, minLat],
+        [maxLng, maxLat]
+      ];
+    }
+
+    var wrap = mapEl.parentElement;
+    var tipEl = document.createElement("div");
+    tipEl.className = "footprint-map-tooltip";
+    tipEl.hidden = true;
+    tipEl.setAttribute("aria-hidden", "true");
+    if (wrap) wrap.appendChild(tipEl);
+
+    var tipId = "";
+    var markers = {};
+    var activeId = "";
+    var indiaBounds = null;
+    var cards = document.querySelectorAll(cardSelector);
+    var markersReady = false;
+
+    /* Temporary view until GeoJSON bounds are available — not the primary framing */
+    var map = new maplibregl.Map({
+      container: mapEl,
+      style: BASEMAP_STYLE_URL,
+      center: [0, 20],
+      zoom: 1,
+      attributionControl: false
     });
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      maxZoom: 19,
-      attribution:
-        '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(map);
+    map.addControl(
+      new maplibregl.AttributionControl({ compact: true }),
+      "bottom-right"
+    );
+    map.addControl(new maplibregl.NavigationControl({ showCompass: false }), "top-right");
 
-    var markers = {};
-    var bounds = L.latLngBounds([]);
-    var activeId = "";
-    var cards = document.querySelectorAll(cardSelector);
-
-    function fitAll() {
-      map.fitBounds(bounds, {
-        paddingTopLeft: [56, 72],
-        paddingBottomRight: [40, 40],
-        maxZoom: 6
+    function fitIndiaBoundary(animated) {
+      if (!indiaBounds) return;
+      map.fitBounds(indiaBounds, {
+        padding: indiaFitPadding(),
+        duration: animated ? 700 : 0
       });
     }
 
-    function closeAllTooltips(exceptId) {
-      Object.keys(markers).forEach(function (key) {
-        if (exceptId && key === exceptId) return;
-        markers[key].closeTooltip();
-      });
+    function hideTooltip() {
+      tipId = "";
+      tipEl.hidden = true;
+      tipEl.textContent = "";
     }
 
-    function bestTooltipDirection(id, marker) {
-      // Nashik sits near the top edge in the India overview — keep its label to the right.
-      if (id === "nashik") return "right";
-
-      var pt = map.latLngToContainerPoint(marker.getLatLng());
-      var size = map.getSize();
-      var edgeX = 140;
-      var edgeTop = 96;
-      var edgeBottom = 64;
-
-      if (pt.y < edgeTop) return "right";
-      if (pt.y > size.y - edgeBottom) return "top";
-      if (pt.x > size.x - edgeX) return "left";
-      if (pt.x < edgeX) return "right";
-      return "top";
-    }
-
-    function tooltipOffset(direction) {
-      if (direction === "bottom") return [0, 12];
-      if (direction === "left") return [-14, -18];
-      if (direction === "right") return [16, -18];
-      return [0, -40];
+    function positionTooltip() {
+      if (!tipId || tipEl.hidden || !markers[tipId]) return;
+      var pt = map.project(markers[tipId].getLngLat());
+      var size = map.getContainer().getBoundingClientRect();
+      var offsetY = markers[tipId].getElement().classList.contains("is-star") ? 18 : 40;
+      var x = pt.x;
+      var y = pt.y - offsetY;
+      if (tipId === "nashik") {
+        x = pt.x + 18;
+        y = pt.y - 8;
+        tipEl.style.transform = "translate(0, -50%)";
+      } else {
+        tipEl.style.transform = "translate(-50%, -100%)";
+      }
+      x = Math.max(12, Math.min(size.width - 12, x));
+      y = Math.max(12, Math.min(size.height - 12, y));
+      tipEl.style.left = x + "px";
+      tipEl.style.top = y + "px";
     }
 
     function showHoverTooltip(id) {
-      var marker = markers[id];
       var loc = locations[id];
-      if (!marker || !loc) return;
+      var marker = markers[id];
+      if (!loc || !marker) return;
 
-      marker.setZIndexOffset(1000);
       Object.keys(markers).forEach(function (key) {
-        if (key !== id) markers[key].setZIndexOffset(0);
+        var el = markers[key].getElement();
+        if (el) el.style.zIndex = key === id ? "2" : "1";
       });
 
-      closeAllTooltips();
-
-      var direction = bestTooltipDirection(id, marker);
-      var label = hoverLabel(loc);
-
-      if (marker.getTooltip()) marker.unbindTooltip();
-      marker.bindTooltip(label, {
-        direction: direction,
-        offset: tooltipOffset(direction),
-        opacity: 0.97,
-        className: "footprint-tooltip",
-        sticky: false,
-        permanent: false,
-        interactive: false
-      });
-      marker.openTooltip();
+      tipId = id;
+      tipEl.textContent = hoverLabel(loc);
+      tipEl.hidden = false;
+      positionTooltip();
     }
 
     function highlightCards(id, scrollIntoView) {
@@ -1267,14 +1318,14 @@
         if (el) {
           el.classList.toggle("is-active", key === id);
           el.setAttribute("aria-expanded", key === id ? "true" : "false");
+          el.style.zIndex = key === id ? "2" : "1";
         }
-        markers[key].setZIndexOffset(key === id ? 1000 : 0);
       });
     }
 
     function clearActive() {
       activeId = "";
-      closeAllTooltips();
+      hideTooltip();
       cards.forEach(function (card) {
         card.classList.remove("is-active", "is-flipped", "is-expanded");
         card.setAttribute("aria-pressed", "false");
@@ -1284,8 +1335,8 @@
         if (el) {
           el.classList.remove("is-active");
           el.setAttribute("aria-expanded", "false");
+          el.style.zIndex = "1";
         }
-        markers[key].setZIndexOffset(0);
       });
     }
 
@@ -1295,74 +1346,163 @@
       if (!loc || !marker) return;
 
       activeId = id;
-      closeAllTooltips();
+      hideTooltip();
       highlightCards(id, !fly);
 
       if (fly) {
-        map.flyTo(loc.coords, loc.zoom, { duration: 1.1 });
-      } else {
-        map.panInside(marker.getLatLng(), {
-          paddingTopLeft: [48, 80],
-          paddingBottomRight: [48, 48],
-          animate: true,
-          duration: 0.3
+        map.flyTo({
+          center: lngLatOf(loc),
+          zoom: loc.zoom,
+          duration: 1100
         });
       }
     }
 
-    Object.keys(locations).forEach(function (id) {
-      var loc = locations[id];
-      var label = hoverLabel(loc);
-      var marker = L.marker(loc.coords, {
-        icon: pinIcon(loc),
-        keyboard: true,
-        riseOnHover: true,
-        bubblingMouseEvents: false,
-        alt: label
-      }).addTo(map);
+    function createMarkerElement(loc) {
+      var el = document.createElement("div");
+      if (loc.kind === "hq") {
+        el.className = "footprint-marker is-hq is-star";
+        el.innerHTML = '<span class="footprint-star" aria-hidden="true">★</span>';
+      } else {
+        el.className = "footprint-marker";
+        el.innerHTML = '<span class="footprint-pin" aria-hidden="true"></span>';
+      }
+      return el;
+    }
 
-      marker.on("mouseover", function () {
-        showHoverTooltip(id);
-        if (activeId !== id) {
-          cards.forEach(function (card) {
-            card.classList.toggle("is-linked", card.getAttribute("data-location") === id);
-          });
-        }
-      });
+    function addLocationMarkers() {
+      if (markersReady) return;
+      markersReady = true;
 
-      marker.on("mouseout", function () {
-        marker.closeTooltip();
-        cards.forEach(function (card) {
-          card.classList.remove("is-linked");
-        });
-        if (activeId !== id) marker.setZIndexOffset(0);
-      });
-
-      marker.on("click", function (e) {
-        L.DomEvent.stopPropagation(e);
-        marker.closeTooltip();
-        setActive(id, true);
-      });
-
-      markers[id] = marker;
-      bounds.extend(loc.coords);
-
-      var el = marker.getElement();
-      if (el) {
+      Object.keys(locations).forEach(function (id) {
+        var loc = locations[id];
+        var label = hoverLabel(loc);
+        var el = createMarkerElement(loc);
         el.setAttribute("tabindex", "0");
         el.setAttribute("role", "button");
-        el.setAttribute("aria-label", label + ". Activate for full address and export details.");
+        el.setAttribute(
+          "aria-label",
+          label + ". Activate for full address and export details."
+        );
         el.setAttribute("aria-expanded", "false");
+
+        var marker = new maplibregl.Marker({
+          element: el,
+          anchor: loc.kind === "hq" ? "center" : "bottom",
+          pitchAlignment: "viewport",
+          rotationAlignment: "viewport"
+        })
+          .setLngLat(lngLatOf(loc))
+          .addTo(map);
+
+        el.addEventListener("mouseenter", function () {
+          showHoverTooltip(id);
+          if (activeId !== id) {
+            cards.forEach(function (card) {
+              card.classList.toggle(
+                "is-linked",
+                card.getAttribute("data-location") === id
+              );
+            });
+          }
+        });
+
+        el.addEventListener("mouseleave", function () {
+          if (tipId === id) hideTooltip();
+          cards.forEach(function (card) {
+            card.classList.remove("is-linked");
+          });
+        });
+
+        el.addEventListener("click", function (e) {
+          e.stopPropagation();
+          hideTooltip();
+          setActive(id, true);
+        });
+
         el.addEventListener("keydown", function (e) {
           if (e.key === "Enter" || e.key === " ") {
             e.preventDefault();
             setActive(id, true);
           }
         });
+
+        markers[id] = marker;
+      });
+    }
+
+    function ensureBoundaryLayer(geojson) {
+      if (map.getSource("india-boundary")) {
+        map.getSource("india-boundary").setData(geojson);
+      } else {
+        map.addSource("india-boundary", {
+          type: "geojson",
+          data: geojson
+        });
       }
+
+      if (!map.getLayer("india-boundary-line")) {
+        map.addLayer({
+          id: "india-boundary-line",
+          type: "line",
+          source: "india-boundary",
+          layout: {
+            "line-join": "round",
+            "line-cap": "round"
+          },
+          paint: {
+            "line-color": BOUNDARY_LINE_COLOR,
+            "line-width": boundaryLineWidth(),
+            "line-opacity": 0.95
+          }
+        });
+      } else {
+        map.setPaintProperty(
+          "india-boundary-line",
+          "line-width",
+          boundaryLineWidth()
+        );
+      }
+    }
+
+    function loadIndiaBoundaryAndFrame() {
+      return fetch(BOUNDARY_GEOJSON_URL, { cache: "no-cache" })
+        .then(function (res) {
+          if (!res.ok) {
+            throw new Error(
+              "India boundary GeoJSON failed to load (" +
+                res.status +
+                "): " +
+                BOUNDARY_GEOJSON_URL
+            );
+          }
+          return res.json();
+        })
+        .then(function (geojson) {
+          ensureBoundaryLayer(geojson);
+          indiaBounds = boundsFromGeoJSON(geojson);
+          if (!indiaBounds) {
+            throw new Error("India boundary GeoJSON has no usable coordinates");
+          }
+          fitIndiaBoundary(false);
+          addLocationMarkers();
+        })
+        .catch(function (err) {
+          console.error(err);
+          /* Keep basemap usable; do not invent a replacement boundary */
+          addLocationMarkers();
+        });
+    }
+
+    map.on("load", function () {
+      loadIndiaBoundaryAndFrame();
     });
 
-    map.on("click", clearActive);
+    map.on("click", function () {
+      clearActive();
+    });
+
+    map.on("move", positionTooltip);
 
     var fineHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
@@ -1381,7 +1521,7 @@
       });
 
       card.addEventListener("mouseleave", function () {
-        if (markers[locId]) markers[locId].closeTooltip();
+        if (tipId === locId) hideTooltip();
         if (fineHover && activeId !== locId) {
           card.classList.remove("is-expanded");
         }
@@ -1391,7 +1531,6 @@
         if (e.target.closest("a")) return;
         var id = card.getAttribute("data-location");
 
-        /* Touch / coarse pointer: first tap expands plant details; second tap flips */
         if (!fineHover && id !== "hq") {
           if (!card.classList.contains("is-expanded") && activeId !== id) {
             cards.forEach(function (c) {
@@ -1406,7 +1545,6 @@
         if (activeId === id) {
           clearActive();
           card.classList.remove("is-expanded");
-          fitAll();
           return;
         }
         cards.forEach(function (c) {
@@ -1424,18 +1562,18 @@
       });
     });
 
-    fitAll();
-    window.setTimeout(function () {
-      map.invalidateSize();
-      fitAll();
-    }, 180);
-
     window.addEventListener("resize", function () {
-      map.invalidateSize();
+      map.resize();
+      if (map.getLayer("india-boundary-line")) {
+        map.setPaintProperty(
+          "india-boundary-line",
+          "line-width",
+          boundaryLineWidth()
+        );
+      }
+      positionTooltip();
     });
   })();
-
-
 
   /* Certifications logo strip + detail carousel */
   (function () {
