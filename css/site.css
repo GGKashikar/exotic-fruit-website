@@ -202,7 +202,9 @@ p {
 /* ========== UTILITY BAR ========== */
 .utility-bar {
   --utility-h: 44px;
-  position: relative;
+  position: sticky;
+  top: 0;
+  z-index: 210;
   height: var(--utility-h);
   background:
     linear-gradient(90deg, rgba(242, 140, 40, 0.1), transparent 18%, transparent 82%, rgba(242, 140, 40, 0.08)),
@@ -215,7 +217,14 @@ p {
   align-items: center;
   border-bottom: 1px solid rgba(242, 140, 40, 0.32);
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.utility-bar::-webkit-scrollbar {
+  display: none;
 }
 
 .utility-bar::before {
@@ -292,7 +301,7 @@ p {
 /* ========== STICKY HEADER ========== */
 .site-header {
   position: sticky;
-  top: 0;
+  top: var(--utility-h);
   z-index: 200;
   height: var(--header-h);
   display: flex;
@@ -1038,7 +1047,7 @@ p {
   margin-top: 10px;
   padding-top: 10px;
   border-top: 1px solid rgba(255, 255, 255, 0.14);
-  min-height: 3.4em;
+  min-height: 3.9em;
   box-sizing: border-box;
 }
 
@@ -1051,7 +1060,7 @@ p {
   padding: 0 2px;
   font-size: 0.86rem;
   font-weight: 600;
-  line-height: 1.45;
+  line-height: 1.35;
   letter-spacing: 0.01em;
   color: #f7f1e6;
   opacity: 0;
@@ -1059,6 +1068,26 @@ p {
   transform: translateY(4px);
   transition: opacity 0.2s ease, transform 0.2s ease, visibility 0.2s;
   pointer-events: none;
+}
+
+.hero-plants-foot-belt {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--amber-accent);
+  line-height: 1.3;
+}
+
+.hero-plants-foot-place {
+  display: block;
+  margin-top: 3px;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: rgba(247, 241, 230, 0.78);
+  text-transform: none;
 }
 
 .hero-plants:has([data-unit="nashik"]:hover) [data-unit-detail="nashik"],
@@ -2272,7 +2301,7 @@ p {
 .product-card[id],
 .section[id],
 .page-hero {
-  scroll-margin-top: calc(var(--header-h) + 12px);
+  scroll-margin-top: calc(var(--header-h) + var(--utility-h) + 12px);
 }
 
 .address-stack h3,
@@ -3692,7 +3721,7 @@ p {
   background: var(--surface-white);
   border-bottom: 1px solid var(--border-light);
   padding: 18px 0 0;
-  scroll-margin-top: calc(var(--header-h) + 12px);
+  scroll-margin-top: calc(var(--header-h) + var(--utility-h) + 12px);
 }
 
 .pd-tabs {
@@ -4048,7 +4077,7 @@ p {
 
 .about-sustain {
   margin-top: 28px;
-  scroll-margin-top: calc(var(--header-h) + 12px);
+  scroll-margin-top: calc(var(--header-h) + var(--utility-h) + 12px);
 }
 
 .about-diff {
@@ -6591,7 +6620,7 @@ video {
   }
 
   .utility-bar {
-    height: auto;
+    height: var(--utility-h);
     min-height: var(--utility-h);
     overflow-x: auto;
     overflow-y: hidden;
@@ -6887,7 +6916,7 @@ svg {
   }
 
   .utility-bar {
-    height: auto;
+    height: var(--utility-h);
     min-height: var(--utility-h);
     overflow-x: auto;
     overflow-y: hidden;
@@ -7663,7 +7692,7 @@ svg {
 #certificates,
 #policy,
 #downloads {
-  scroll-margin-top: calc(var(--header-h) + 12px);
+  scroll-margin-top: calc(var(--header-h) + var(--utility-h) + 12px);
 }
 
 @media (max-width: 1100px) {
@@ -8143,7 +8172,7 @@ svg {
 #what-we-do,
 #sourcing,
 #top {
-  scroll-margin-top: calc(var(--header-h) + 12px);
+  scroll-margin-top: calc(var(--header-h) + var(--utility-h) + 12px);
 }
 
 @media (max-width: 980px) {
@@ -8848,5 +8877,229 @@ svg {
 
   .page-about .sourcing-card img {
     height: 110px;
+  }
+}
+
+/* ========== CROP CALENDAR UI REFINE (visual only) ========== */
+#calendar.section {
+  padding-top: 68px;
+  padding-bottom: 68px;
+}
+
+#calendar .section-head {
+  margin-bottom: 18px;
+}
+
+#calendar .section-intro {
+  margin-top: 8px;
+  max-width: 62ch;
+}
+
+#calendar .cal-legend {
+  gap: 12px 20px;
+  margin: 0 0 14px;
+  font-size: 0.8rem;
+}
+
+#calendar .cal-legend i {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  margin-right: 7px;
+}
+
+#calendar .cal-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  border: 1px solid rgba(19, 56, 44, 0.1);
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: none;
+}
+
+#calendar .cal-table {
+  width: 100%;
+  min-width: 980px;
+  border-collapse: collapse;
+  table-layout: fixed;
+  background: #fff;
+}
+
+#calendar .cal-table th,
+#calendar .cal-table td {
+  padding: 7px 4px;
+  text-align: center;
+  font-size: 0.7rem;
+  line-height: 1.2;
+  border: 0;
+  border-bottom: 1px solid rgba(19, 56, 44, 0.07);
+  vertical-align: middle;
+}
+
+#calendar .cal-table thead th {
+  padding: 11px 4px 10px;
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--espresso);
+  font-weight: 750;
+  background: linear-gradient(180deg, var(--cream-ivory, #F7F3EB), #fff);
+  border-bottom: 1px solid rgba(19, 56, 44, 0.14);
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+#calendar .cal-table tbody tr:last-child th,
+#calendar .cal-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+#calendar .cal-table tbody tr:hover th.crop,
+#calendar .cal-table tbody tr:hover td {
+  filter: brightness(0.99);
+}
+
+#calendar .cal-table .crop {
+  position: sticky;
+  left: 0;
+  z-index: 6;
+  width: 132px;
+  min-width: 132px;
+  max-width: 132px;
+  text-align: left;
+  font-weight: 750;
+  font-size: 0.84rem;
+  color: var(--emerald-primary);
+  background: #fff;
+  padding: 8px 12px 8px 16px;
+  box-shadow: 6px 0 10px rgba(10, 30, 23, 0.03);
+  letter-spacing: 0.01em;
+}
+
+#calendar .cal-table thead .crop {
+  z-index: 7;
+  background: linear-gradient(180deg, var(--cream-ivory, #F7F3EB), #fff);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--espresso);
+  font-weight: 750;
+}
+
+#calendar .cal-table tbody th.crop {
+  background: #fff;
+}
+
+#calendar .cal-table td.peak,
+#calendar .cal-table td.stock,
+#calendar .cal-table td.preorder {
+  padding: 6px 2px;
+  border-radius: 0;
+  letter-spacing: 0.01em;
+}
+
+#calendar .cal-table td.peak {
+  background: var(--emerald-primary);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.66rem;
+}
+
+#calendar .cal-table td.stock {
+  background: rgba(248, 249, 250, 0.95);
+  color: var(--text-muted);
+  font-weight: 600;
+  font-size: 0.66rem;
+}
+
+#calendar .cal-table td.preorder {
+  background: rgba(242, 140, 40, 0.16);
+  color: #9a4f08;
+  font-weight: 700;
+  font-size: 0.66rem;
+}
+
+/* Soft continuous timeline feel between adjacent same-status months */
+#calendar .cal-table td.peak + td.peak,
+#calendar .cal-table td.stock + td.stock,
+#calendar .cal-table td.preorder + td.preorder {
+  box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+#calendar .cal-table .cal-action {
+  width: 118px;
+  min-width: 118px;
+  white-space: nowrap;
+  padding: 6px 10px 6px 6px;
+  background: #fff;
+}
+
+#calendar .cal-table thead .cal-action {
+  background: linear-gradient(180deg, var(--cream-ivory, #F7F3EB), #fff);
+  font-size: 0.66rem;
+  letter-spacing: 0.08em;
+}
+
+#calendar .cal-table .btn-contract {
+  border: 1px solid rgba(19, 56, 44, 0.22);
+  background: rgba(19, 56, 44, 0.04);
+  color: var(--emerald-primary);
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 0.66rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+#calendar .cal-table .btn-contract:hover {
+  background: var(--emerald-primary);
+  border-color: var(--emerald-primary);
+  color: #fff;
+}
+
+@media (max-width: 980px) {
+  #calendar.section {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+
+  #calendar .cal-table .crop {
+    width: 118px;
+    min-width: 118px;
+    max-width: 118px;
+    font-size: 0.8rem;
+    padding-left: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  #calendar.section {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  #calendar .cal-legend {
+    gap: 10px 14px;
+    margin-bottom: 12px;
+  }
+
+  #calendar .cal-table {
+    min-width: 920px;
+  }
+
+  #calendar .cal-table th,
+  #calendar .cal-table td {
+    padding: 6px 2px;
+  }
+
+  #calendar .cal-table .crop {
+    width: 108px;
+    min-width: 108px;
+    max-width: 108px;
+    font-size: 0.76rem;
   }
 }
