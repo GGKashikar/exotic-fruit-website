@@ -1435,6 +1435,87 @@
     });
   })();
 
+
+
+  /* Certifications logo strip + detail carousel */
+  (function () {
+    var root = document.querySelector("[data-cert-carousel]");
+    if (!root) return;
+
+    var tabs = Array.prototype.slice.call(root.querySelectorAll('[role="tab"]'));
+    var panels = Array.prototype.slice.call(root.querySelectorAll("[data-cert-panel]"));
+    var dots = Array.prototype.slice.call(root.querySelectorAll("[data-cert-dot]"));
+    var prev = root.querySelector("[data-cert-prev]");
+    var next = root.querySelector("[data-cert-next]");
+    var index = 0;
+    var touchX = null;
+
+    function setIndex(nextIndex, focusTab) {
+      if (!tabs.length) return;
+      index = (nextIndex + tabs.length) % tabs.length;
+
+      tabs.forEach(function (tab, i) {
+        var on = i === index;
+        tab.classList.toggle("is-active", on);
+        tab.setAttribute("aria-selected", on ? "true" : "false");
+        tab.tabIndex = on ? 0 : -1;
+        if (on && focusTab) tab.focus();
+      });
+
+      panels.forEach(function (panel, i) {
+        var on = i === index;
+        panel.classList.toggle("is-active", on);
+        if (on) panel.removeAttribute("hidden");
+        else panel.setAttribute("hidden", "");
+      });
+
+      dots.forEach(function (dot, i) {
+        dot.classList.toggle("is-active", i === index);
+      });
+    }
+
+    tabs.forEach(function (tab) {
+      tab.addEventListener("click", function () {
+        setIndex(Number(tab.getAttribute("data-cert-index") || 0), false);
+      });
+      tab.addEventListener("keydown", function (e) {
+        if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+          e.preventDefault();
+          setIndex(index + 1, true);
+        } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+          e.preventDefault();
+          setIndex(index - 1, true);
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          setIndex(0, true);
+        } else if (e.key === "End") {
+          e.preventDefault();
+          setIndex(tabs.length - 1, true);
+        }
+      });
+    });
+
+    if (prev) prev.addEventListener("click", function () { setIndex(index - 1, false); });
+    if (next) next.addEventListener("click", function () { setIndex(index + 1, false); });
+
+    var viewport = root.querySelector(".cert-detail-viewport");
+    if (viewport) {
+      viewport.addEventListener("touchstart", function (e) {
+        if (!e.changedTouches || !e.changedTouches[0]) return;
+        touchX = e.changedTouches[0].clientX;
+      }, { passive: true });
+      viewport.addEventListener("touchend", function (e) {
+        if (touchX == null || !e.changedTouches || !e.changedTouches[0]) return;
+        var dx = e.changedTouches[0].clientX - touchX;
+        touchX = null;
+        if (Math.abs(dx) < 40) return;
+        setIndex(index + (dx < 0 ? 1 : -1), false);
+      }, { passive: true });
+    }
+
+    setIndex(0, false);
+  })();
+
   document.querySelectorAll(".pd-tabs").forEach(function (tabs) {
     var buttons = tabs.querySelectorAll("[data-pd-tab]");
     var panels = document.querySelectorAll("[data-pd-panel]");
